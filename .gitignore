@@ -5,6 +5,7 @@
 ### Remove
 .vscode
 themes
+.env
 
 
 ### Django ###
