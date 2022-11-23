@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect, HttpResponse
 # Create your views here.
 from .forms import UserForm
 from .models import User
+from django.contrib import messages
+
 
 def registerUser(request):
     if request.POST:
@@ -27,8 +29,10 @@ def registerUser(request):
             user = User.objects.create_user(first_name=first_name, last_name=last_name,username=username,password=password, email=email)
             user.role = User.CUSTOMER
             user.save()
+            messages.success(request,'Your account has been register sucessfully')
             return redirect(registerUser)
         else:
+            messages.warning(request,'Invalid Information')
             print("Invalid Form")
             print(form.errors)
     else:
