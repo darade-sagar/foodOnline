@@ -8,8 +8,11 @@ def registerUser(request):
     if request.POST:
         form = UserForm(request.POST)
         if form.is_valid():
+            # create user using form
+            password=form.cleaned_data['password']  #request.POST.get('password')
             user = form.save(commit=False)
             user.role = User.CUSTOMER
+            user.set_password(password)
             user.save()
             return redirect(registerUser)
     else:
