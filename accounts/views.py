@@ -32,7 +32,7 @@ def registerUser(request):
             messages.success(request,'Your account has been register sucessfully')
             return redirect(registerUser)
         else:
-            messages.warning(request,'Invalid Information')
+            messages.error(request,'Invalid Information')
             print("Invalid Form")
             print(form.errors)
     else:

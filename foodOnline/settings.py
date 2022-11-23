@@ -139,3 +139,9 @@ AUTH_USER_MODEL = 'accounts.User'
 # Media files
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# modify django message tags
+from django.contrib.messages import constants as messages
+MESSAGES_TAGS ={
+    messages.ERROR: 'danger',
+}
