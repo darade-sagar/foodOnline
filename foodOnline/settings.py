@@ -143,6 +143,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # modify django message tags
 from django.contrib.messages import constants as messages
-MESSAGES_TAGS ={
-    messages.ERROR: 'danger',
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
 }

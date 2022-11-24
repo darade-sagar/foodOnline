@@ -6,6 +6,8 @@ from .models import User, UserProfile
 from django.contrib import messages
 from vendor.forms import VendorForm
 
+from django.contrib.auth import login, logout, authenticate
+
 
 def registerUser(request):
     if request.POST:
@@ -75,7 +77,20 @@ def registerVendor(request):
 
 
 def login_view(request):
-    return render(request,'accounts/login.html')
+    if request.POST:
+        email = request.POST['email'] 
+        password = request.POST['password'] 
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            login(request,user)
+            messages.success(request,"You are now logged in!")
+            return redirect(dashboard)
+        else:
+            messages.error(request,"Invalid Creadentials")
+            return redirect(login_view)
+
+    else:
+        return render(request,'accounts/login.html')
 
 def logout_view(request):
     return render(request,'accounts/logout.html')
