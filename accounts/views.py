@@ -36,7 +36,6 @@ def registerUser(request):
 
 
 def registerVendor(request):
-
     if request.POST:
         form = UserForm(request.POST)
         vform = VendorForm(request.POST, request.FILES)
@@ -74,3 +73,12 @@ def registerVendor(request):
     }
     return render(request,'accounts/registerVendor.html', context)
 
+
+def login_view(request):
+    return render(request,'accounts/login.html')
+
+def logout_view(request):
+    return render(request,'accounts/logout.html')
+
+def dashboard(request):
+    return render(request,'accounts/dashboard.html')
