@@ -10,6 +10,9 @@ from django.contrib.auth import login, logout, authenticate
 
 
 def registerUser(request):
+    if request.user.is_authenticated:
+        messages.warning(request,'You are already Logged In!')
+        return redirect(dashboard)
     if request.POST:
         form = UserForm(request.POST)
         if form.is_valid():
@@ -38,6 +41,9 @@ def registerUser(request):
 
 
 def registerVendor(request):
+    if request.user.is_authenticated:
+        messages.warning(request,'You are already Logged In!')
+        return redirect(dashboard)
     if request.POST:
         form = UserForm(request.POST)
         vform = VendorForm(request.POST, request.FILES)
@@ -77,6 +83,9 @@ def registerVendor(request):
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+        messages.warning(request,'You are already Logged In!')
+        return redirect(dashboard)
     if request.POST:
         email = request.POST['email'] 
         password = request.POST['password'] 
