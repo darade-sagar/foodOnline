@@ -7,8 +7,9 @@ from vendor.forms import VendorForm
 from accounts.utils import detectUser
 
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from .customDecorator import check_role_vendor,check_role_customer
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -114,9 +115,11 @@ def myAccount(request):
     return redirect(redirectUrl)
 
 @login_required(login_url='login')
+@user_passes_test(check_role_vendor)
 def vendorDashboard(request):
     return render(request,'accounts/vendorDashboard.html')
 
 @login_required(login_url='login')
+@user_passes_test(check_role_customer)
 def custDashboard(request):
     return render(request,'accounts/custDashboard.html')
