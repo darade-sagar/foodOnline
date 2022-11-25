@@ -4,12 +4,16 @@ from django.shortcuts import render, redirect, HttpResponse
 from .forms import UserForm
 from .models import User, UserProfile
 from vendor.forms import VendorForm
-from accounts.utils import detectUser
+from accounts.utils import detectUser, send_verification_email
 
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .customDecorator import check_role_vendor,check_role_customer
+
+# to activate user
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -29,6 +33,11 @@ def registerUser(request):
             user = User.objects.create_user(first_name=first_name, last_name=last_name,username=username,password=password, email=email)
             user.role = User.CUSTOMER
             user.save()
+
+            # send verification mail
+            send_verification_email(request, user)
+
+
             messages.success(request,'Your account has been register sucessfully')
             return redirect(registerUser)
         else:
@@ -65,6 +74,9 @@ def registerVendor(request):
             vendor.user = user
             vendor.user_profile = user_profile
             vendor.save()
+
+            # send verification mail
+            send_verification_email(request, user)
 
             messages.success(request,'Your account has been register sucessfully! Please wait for approval')
             return redirect(registerVendor)
@@ -123,3 +135,22 @@ def vendorDashboard(request):
 @user_passes_test(check_role_customer)
 def custDashboard(request):
     return render(request,'accounts/custDashboard.html')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        
+        user = User._default_manager.get(pk=uid)
+
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user= None
+    
+    if user is not None and default_token_generator.check_token(user,token):
+        user.is_active = True
+        user.save()
+        messages.success(request, 'Congratulations! Your account is activated.')
+        return redirect(myAccount)
+    else:
+        messages.error(request,'Invalid Activation link')
+        return redirect(myAccount)
