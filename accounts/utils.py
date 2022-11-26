@@ -17,11 +17,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.conf import settings
 
-def send_verification_email(request, user):
+def send_verification_email(request, user, mail_subject, template):
     from_email = settings.DEFAULT_FROM_EMAIL
     current_site = get_current_site(request)
-    mail_subject = 'Please activate your account | foodOnline'
-    message = render_to_string('accounts/emails/account_verification_email.html',{
+    message = render_to_string(template,{
         'user':user,
         'domain': current_site,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),

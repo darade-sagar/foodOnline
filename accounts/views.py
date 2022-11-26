@@ -35,7 +35,9 @@ def registerUser(request):
             user.save()
 
             # send verification mail
-            send_verification_email(request, user)
+            mail_subject = 'Please activate your account | foodOnline'
+            template = 'accounts/emails/account_verification_email.html'
+            send_verification_email(request, user, mail_subject=mail_subject, template=template)
 
 
             messages.success(request,'Your account has been register sucessfully')
@@ -76,7 +78,9 @@ def registerVendor(request):
             vendor.save()
 
             # send verification mail
-            send_verification_email(request, user)
+            mail_subject = 'Please activate your account | foodOnline'
+            template = 'accounts/emails/account_verification_email.html'
+            send_verification_email(request, user, mail_subject=mail_subject, template=template)
 
             messages.success(request,'Your account has been register sucessfully! Please wait for approval')
             return redirect(registerVendor)
@@ -154,3 +158,34 @@ def activate(request, uidb64, token):
     else:
         messages.error(request,'Invalid Activation link')
         return redirect(myAccount)
+
+def forgot_password(request):
+    if request.POST:
+        email = request.POST['email']
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
+
+            # send reset password
+            mail_subject = 'Reset your password! | foodOnline'
+            template = 'accounts/emails/reset_password_email.html'
+            send_verification_email(request, user, mail_subject=mail_subject, template=template)
+            messages.success(request, 'Forgot password link has been sent on your email')
+            return redirect(login_view)
+        else:
+            messages.error(request, 'Account does not exists')
+            return redirect(forgot_password)
+    return render(request,'accounts/forgot_password.html')
+
+def reset_password_validate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        
+        user = User._default_manager.get(pk=uid)
+
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user= None
+    return render(request,'accounts/reset_password_validate.html')
+
+def reset_password(request):
+    return render(request,'accounts/reset_password.html')
