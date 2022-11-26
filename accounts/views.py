@@ -83,7 +83,7 @@ def registerVendor(request):
             send_verification_email(request, user, mail_subject=mail_subject, template=template)
 
             messages.success(request,'Your account has been register sucessfully! Please wait for approval')
-            return redirect(registerVendor)
+            return redirect(login_view)
 
         else:
             messages.error(request,'Invalid Form data')

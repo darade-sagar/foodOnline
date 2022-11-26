@@ -1,0 +1,14 @@
+{% autoescape off %}
+
+Hi {{user.first_name}},
+
+{% if is_approved %}
+Congratulations! Your restaurant has been approved by admin team to list it on foodOnline.
+{% else %}
+We're sorry! We can not register your restaurant in foodOnline marketplace due to licence issue.
+For more details conect to foodOnline support team
+{% endif %}
+
+Regards,
+Team foodOnline
+{% endautoescape %}
