@@ -15,6 +15,8 @@ from .customDecorator import check_role_vendor,check_role_customer
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 
+from vendor.models import Vendor
+
 def registerUser(request):
     if request.user.is_authenticated:
         messages.warning(request,'You are already Logged In!')
@@ -133,7 +135,11 @@ def myAccount(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
-    return render(request,'accounts/vendorDashboard.html')
+    vendor = Vendor.objects.get(user=request.user)
+    context ={
+        'vendor' : vendor,
+    }
+    return render(request,'accounts/vendorDashboard.html', context)
 
 @login_required(login_url='login')
 @user_passes_test(check_role_customer)

@@ -1,12 +1,12 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 {% block content %}
 
 <!-- Main Section Start -->
 <div class="main-section">
-
     <!--Include cover-->
     {% include 'includes/cover.html' %}
+
     
     <div class="page-section account-header buyer-logged-in">
         <div class="container">
@@ -95,7 +95,6 @@
 </div>
 <!-- Main Section End -->
 
-<!--Inclue alerts-->
-{% include 'includes/alerts.html' %}
 
+{% include 'includes/alerts.html' %}
 {% endblock content %}
