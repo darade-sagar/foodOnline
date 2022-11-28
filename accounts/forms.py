@@ -22,14 +22,14 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     profile_picture = forms.FileField(widget=forms.FileInput(attrs={'class': 'btn btn-info',}), validators=[allow_only_images_validator])
     cover_photo = forms.FileField(widget=forms.FileInput(attrs={'class': 'btn btn-info',}), validators=[allow_only_images_validator])
-    
+    address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Start typing...', 'required':'required'}))
     #  method-1 to make field readonly
     # latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly',}))
     # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly',}))
     
     class Meta:
         model = UserProfile
-        fields = ['profile_picture', 'cover_photo', 'address_line_1','address_line_2','country', 'state', 'city', 'pincode','latitude','longitude']
+        fields = ['profile_picture', 'cover_photo', 'address','country', 'state', 'city', 'pincode','latitude','longitude']
 
 
     #  method-2 to make field readonly
