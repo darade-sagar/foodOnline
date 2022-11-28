@@ -6,6 +6,7 @@ from accounts.forms import UserProfileForm
 from accounts.models import UserProfile
 from vendor.models import Vendor
 from accounts.customDecorator import check_role_vendor
+from menu.models import Category
 
 
 # package import
@@ -45,4 +46,9 @@ def vprofile(request):
     return render(request,'vendor/vprofile.html', context)
 
 def menu_builder(request):
-    return render(request,'vendor/menu-builder.html')
+    vendor = Vendor.objects.get(user=request.user)
+    categories = Category.objects.filter(vendor=vendor)
+    context = {
+        'categories':categories,
+    }
+    return render(request,'vendor/menu-builder.html',context)
