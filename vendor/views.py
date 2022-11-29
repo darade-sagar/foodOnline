@@ -8,8 +8,11 @@ from vendor.models import Vendor
 from accounts.customDecorator import check_role_vendor
 from menu.models import Category, FoodItem
 
+from menu.forms import CategoryForm
+
 
 # package import
+from django.template.defaultfilters import slugify
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 
@@ -72,3 +75,36 @@ def fooditems_by_category(request,pk=None):
     }
 
     return render(request, 'vendor/fooditems_by_category.html',context)
+
+def add_category(request):
+    if request.POST:
+        print("POST")
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category_name = form.cleaned_data['category_name']
+            category = form.save(commit=False)
+            category.vendor = get_vendor(request)
+
+            # to ensure we have unique slug
+            slug = slugify(category_name)
+            if Category.objects.get(slug=slug) == None:
+                category.slug = slug
+                form.save()
+                print("Added")
+                messages.success(request,'Category Added Successfully!')
+                return redirect(menu_builder)
+            else:
+                messages.error(request,'Category with this name is alredy exist')        
+        else:
+            print(form.errors)
+            messages.error(request,'Validation error!')
+            return redirect(add_category)
+            
+
+    else:
+        form = CategoryForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'vendor/add_category.html',context)
