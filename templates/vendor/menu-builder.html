@@ -34,8 +34,13 @@
                                             <a href="{% url 'fooditems_by_category' cat.id %}"><p class='mb-0 font-weight-bold'>{{cat.category_name}}</p></a>
                                             <small class="text-muted">{{cat.description}}</small>
                                         </td>
-                                        <td><i class="fa fa-edit" aria-hidden="true"> &nbsp; &nbsp; <i class="fa fa-trash text-danger" aria-hidden="true"></td>
-                                        <td></td>
+                                        <td>
+                                            <a href="{% url 'edit_category' cat.id %}" style="color:unset;"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                            &nbsp; &nbsp; 
+                                            <i class="fa fa-trash text-danger" aria-hidden="true">
+
+                                        </td>
+                                        
                                     </tr>
                                 {% endfor %}
                                 </tbody>
