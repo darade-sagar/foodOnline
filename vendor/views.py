@@ -68,7 +68,6 @@ def fooditems_by_category(request,pk=None):
     vendor = get_vendor(request)
     category = get_object_or_404(Category,pk=pk)
     fooditems = FoodItem.objects.filter(vendor=vendor, category_name=category)
-    print(fooditems)
     context = {
         'fooditems': fooditems,
         'category' : category,
@@ -204,3 +203,10 @@ def edit_food(request,pk=None):
         'food':food
     }
     return render(request,'vendor/edit_food.html',context)
+
+
+def delete_food(request,pk=None):
+    food = get_object_or_404(FoodItem,pk=pk)
+    food.delete()
+    messages.success(request,'Fod Item has been deleted successfuly!')
+    return redirect(fooditems_by_category, food.category_name.id) #type:ignore

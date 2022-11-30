@@ -73,6 +73,7 @@
                                 </div>
                                 
                                 <button type="submit" class="btn btn-info"><i class="fa fa-check" aria-hidden="true"></i> Update</button>
+                                <a href="{% url 'delete_food' food.id %}" class="btn btn-danger" onclick="return confirm('Are you sure, you want to delete this food item')"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                             </form>
 
 
