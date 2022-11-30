@@ -84,11 +84,11 @@ def add_category(request):
         form = CategoryForm(request.POST)
         if form.is_valid():
             category_name = form.cleaned_data['category_name']
-            category = form.save(commit=False)
-            category.vendor = get_vendor(request)
+            category_form = form.save(commit=False)
+            category_form.vendor = get_vendor(request)
 
             # to ensure we have unique slug
-            category.slug = slugify(category_name)
+            category_form.slug = slugify(category_name)
             form.save()
             messages.success(request,'Category Added Successfully!')
             return redirect(menu_builder)
@@ -112,11 +112,11 @@ def edit_category(request,pk=None):
         form = CategoryForm(request.POST,instance=category)
         if form.is_valid():
             category_name = form.cleaned_data['category_name']
-            category = form.save(commit=False)
-            category.vendor = get_vendor(request)
-            category.slug = slugify(category_name)
-            form.save()
-            messages.success(request,'Category Added Successfully!')
+            category_form = form.save(commit=False)
+            category_form.vendor = get_vendor(request)
+            category_form.slug = slugify(category_name)
+            category_form.save()
+            messages.success(request,'Category Updated Successfully!')
             return redirect(menu_builder)
         else:
             messages.error(request,'Validation error!')
@@ -156,14 +156,14 @@ def add_food(request):
         form = FoodItemForm(request.POST, request.FILES)
         if form.is_valid():
             food_title = form.cleaned_data['food_title']
-            food = form.save(commit=False)
-            food.vendor = get_vendor(request)
+            food_form = form.save(commit=False)
+            food_form.vendor = get_vendor(request)
 
             # to ensure we have unique slug
-            food.slug = slugify(food_title)
-            form.save()
+            food_form.slug = slugify(food_title)
+            food_form.save()
             messages.success(request,'Food Item Added Successfully!')
-            return redirect(fooditems_by_category, food.category_name.id)
+            return redirect(fooditems_by_category, food_form.category_name.id)
             
         else:
             messages.error(request,'Validation error!')
@@ -175,3 +175,32 @@ def add_food(request):
         'form': form,
     }
     return render(request, 'vendor/add_food.html',context)
+
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def edit_food(request,pk=None):
+    food = get_object_or_404(FoodItem,pk=pk)
+    if request.POST:
+        form = FoodItemForm(request.POST,instance=food)
+        if form.is_valid():
+            food_title = form.cleaned_data['food_title']
+            food_form = form.save(commit=False)
+            food_form.vendor = get_vendor(request)
+            food_form.slug = slugify(food_title)
+            food_form.save()
+            messages.success(request,'Food Item updated Successfully!')
+            return redirect(menu_builder)
+        else:
+            messages.error(request,'Validation error!')
+            return redirect(add_category)
+            
+
+    else:
+        form = FoodItemForm(instance=food)
+
+    context = {
+        'form': form,
+        'food':food
+    }
+    return render(request,'vendor/edit_food.html',context)
