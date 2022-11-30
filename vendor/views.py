@@ -8,7 +8,7 @@ from vendor.models import Vendor
 from accounts.customDecorator import check_role_vendor
 from menu.models import Category, FoodItem
 
-from menu.forms import CategoryForm
+from menu.forms import CategoryForm, FoodItemForm
 
 
 # package import
@@ -133,3 +133,37 @@ def delete_category(request,pk=None):
     category.delete()
     messages.success(request,'Category has been deleted successfuly!')
     return redirect(menu_builder)
+
+
+
+
+
+
+
+
+
+# Food CRUD
+def add_food(request):
+    if request.POST:
+        form = FoodItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            food_title = form.cleaned_data['food_title']
+            food = form.save(commit=False)
+            food.vendor = get_vendor(request)
+
+            # to ensure we have unique slug
+            food.slug = slugify(food_title)
+            form.save()
+            messages.success(request,'Food Item Added Successfully!')
+            return redirect(fooditems_by_category, food.category_name.id)
+            
+        else:
+            messages.error(request,'Validation error!')
+            return redirect(add_food)
+    else:
+        form = FoodItemForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'vendor/add_food.html',context)
