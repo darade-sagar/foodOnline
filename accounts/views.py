@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
+from django.template.defaultfilters import slugify
 
 # Create your views here.
 from .forms import UserForm
@@ -76,6 +77,8 @@ def registerVendor(request):
             user_profile = UserProfile.objects.get(user=user)
             vendor = vform.save(commit=False)
             vendor.user = user
+            vendor_name = vform.cleaned_data['vendor_name']
+            vendor.vendor_slug = slugify(vendor_name) + str(user.id)
             vendor.user_profile = user_profile
             vendor.save()
 
