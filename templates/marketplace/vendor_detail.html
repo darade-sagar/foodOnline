@@ -105,11 +105,9 @@
                                                 <h5 class="text-color">{{category}}</h5>
                                                 <span>{{category.description}}</span>
                                             </div>
-                                            
                                             <ul>
                                                 {% if category.fooditems.all|length > 0 %}
                                                     {% for food in category.fooditems.all %}
-                                                    
                                                     <li>
                                                         <div class="image-holder"><img src="{{food.image.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;"></div>
                                                         <div class="text-holder">
@@ -119,23 +117,24 @@
                                                         <div class="price-holder">
                                                             <span class="price">Rs. {{food.price}}/-</span>
                                                             <a href="#" class="add_to_cart" data-id="{{food.id}}" data-url="{% url 'add_to_cart' food.id %}" style="margin-right:28px"><i class="icon-plus4 text-color"></i></a>
-                                                            <label id="qty">0</label>
+                                                            <label id="qty-{{food.id}}">0</label>
                                                             <a href="#" class="decrease_cart"><i class="icon-minus3 text-color"></i></a>
                                                             <span id="add-menu-loader-10"></span>   
                                                         </div>
                                                     </li>
-                                                    
                                                     {% endfor %}
                                                 {% else %}
                                                     <h5 class="text-center"> No Menu Found! </h5>
-
-                                                {% endif %}
-                                                
+                                                {% endif %}          
                                             </ul>
-
                                         {% endfor %}
-                                        
                                     </div>
+
+                                    {% for item in cart_items %}
+                                        <span id="qty-{{item.fooditem.id}}" class="item_qty d-none" data-qty="{{item.quantity}}">{{item.quantity}}</span>
+                                    {% endfor %}
+
+
                                 </div>
                             </div>
                             
