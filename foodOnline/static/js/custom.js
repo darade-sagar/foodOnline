@@ -13,9 +13,9 @@ $(document).ready(function(){
         $.ajax({
             type:'GET',
             url: url,
-            data: data,
+            data:data,
             success : function(response){
-                alert(response)
+                console.log(response);
             }
         })
     })
