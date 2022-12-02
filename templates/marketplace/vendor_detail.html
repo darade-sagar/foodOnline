@@ -94,31 +94,40 @@
                         </ul>
                         <div class="tab-content">
                             <div id="home" class="tab-pane in active">
-                                <div class="menu-itam-holder">
+                                <div class="menu-itam-holder pb-1">
                                     <div id="menu-item-list-6272" class="menu-itam-list">
+                                        {% if categories|length == 0 %}
+                                            <h5 class="text-center mt-2"> No Category Found! </h5>
+                                        {% endif %}
+
                                         {% for category in categories %}
-                                            <div class="element-title" id="menu-category-2">
+                                            <div class="element-title mt-3 mb-3" id="menu-category-2">
                                                 <h5 class="text-color">{{category}}</h5>
                                                 <span>{{category.description}}</span>
                                             </div>
                                             
                                             <ul>
-                                                {% for food in category.fooditems.all %}
-                                                
-                                                <li>
-                                                    <div class="image-holder"><img src="{{food.image.url}}" alt=""></div>
-                                                    <div class="text-holder">
-                                                        <h6>{{food}}</h6>
-                                                        <span>{{food.description}}</span>
-                                                    </div>
-                                                    <div class="price-holder">
-                                                        <span class="price">Rs. {{food.price}}/-</span>
-                                                        <a href="#" class="restaurant-add-menu-btn"><i class="icon-plus4 text-color"></i></a>
-                                                        <span id="add-menu-loader-10"></span>
-                                                    </div>
-                                                </li>
-                                                
-                                                {% endfor %}
+                                                {% if category.fooditems.all|length > 0 %}
+                                                    {% for food in category.fooditems.all %}
+                                                    
+                                                    <li>
+                                                        <div class="image-holder"><img src="{{food.image.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;"></div>
+                                                        <div class="text-holder">
+                                                            <h6>{{food}}</h6>
+                                                            <span>{{food.description}}</span>
+                                                        </div>
+                                                        <div class="price-holder">
+                                                            <span class="price">Rs. {{food.price}}/-</span>
+                                                            <a href="#" class="restaurant-add-menu-btn"><i class="icon-plus4 text-color"></i></a>
+                                                            <span id="add-menu-loader-10"></span>
+                                                        </div>
+                                                    </li>
+                                                    
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <h5 class="text-center"> No Menu Found! </h5>
+
+                                                {% endif %}
                                                 
                                             </ul>
 

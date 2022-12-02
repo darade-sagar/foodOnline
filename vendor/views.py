@@ -15,7 +15,7 @@ from menu.forms import CategoryForm, FoodItemForm
 from django.template.defaultfilters import slugify
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-
+from django.db.models import Prefetch
 
 def get_vendor(request):
     vendor = Vendor.objects.get(user=request.user)
@@ -56,7 +56,12 @@ def vprofile(request):
 @user_passes_test(check_role_vendor)
 def menu_builder(request):
     vendor = get_vendor(request)
-    categories = Category.objects.filter(vendor=vendor).order_by('created_at')
+    categories = Category.objects.filter(vendor=vendor).order_by('created_at').prefetch_related(
+        Prefetch(
+            'fooditems',
+            queryset= FoodItem.objects.filter()
+        )
+    )
     context = {
         'categories':categories,
     }
