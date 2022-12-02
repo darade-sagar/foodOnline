@@ -30,4 +30,6 @@ def vendor_detail(request, vendor_slug):
     return render(request,'marketplace/vendor_detail.html',context)
 
 def add_to_cart(request,food_id):
+    # this function will be called from AJAX request.
+    
     return HttpResponse("testing",food_id)
