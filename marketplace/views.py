@@ -3,6 +3,7 @@ from vendor.models import Vendor
 from marketplace.models import Cart
 from menu.models import Category, FoodItem
 from django.http import JsonResponse
+from .context_processors import get_cart_counter
 
 from django.db.models import Prefetch
 
@@ -54,11 +55,11 @@ def add_to_cart(request,food_id):
                     # inc cart qty
                     checkCart.quantity += 1
                     checkCart.save()
-                    return JsonResponse({'status':'Success', 'message':'incresed the cart qty'})
+                    return JsonResponse({'status':'Success', 'message':'incresed the cart qty','cart_counter':get_cart_counter(request),'qty':checkCart.quantity})
 
                 except:
                     checkCart = Cart.objects.create(user=request.user, fooditem=fooditem, quantity=1)
-                    return JsonResponse({'status':'Success', 'message':'Added the food to cart'})
+                    return JsonResponse({'status':'Success', 'message':'Added the food to cart','cart_counter':get_cart_counter(request),'qty':checkCart.quantity})
             except:
                 return JsonResponse({'status':'failed', 'message':'this food does not exist'})
 
