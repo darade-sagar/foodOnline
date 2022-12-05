@@ -66,7 +66,7 @@ def add_to_cart(request,food_id):
         else:
             return JsonResponse({'status':'failed', 'message':'Invalid Request'})
     else:
-        return JsonResponse({'status':'failed', 'message':'Please Login to continue'})
+        return JsonResponse({'status':'Login_Required', 'message':'Please Login to continue'})
 
 def decrease_cart(request, food_id):
     # function to check if request is AJAX or not
@@ -99,5 +99,5 @@ def decrease_cart(request, food_id):
         else:
             return JsonResponse({'status':'failed', 'message':'Invalid Request'})
     else:
-        return JsonResponse({'status':'failed', 'message':'Please Login to continue'})
+        return JsonResponse({'status':'Login_Required', 'message':'Please Login to continue'})
 

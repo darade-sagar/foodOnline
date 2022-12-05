@@ -13,9 +13,16 @@ $(document).ready(function(){
             url: url,
             success : function(response){
                 console.log(response);
-                if(response.status == 'Failed'){
-                    console.log('raise the error message')
-                }else{
+                if(response.status == 'Login_Required'){
+                    swal(response.message,'','info').then(function(){
+                        window.location = '/login';
+                    })
+                }
+                else if(response.status == 'Failed'){
+                    swal(response.message,'','error')
+                    
+                }
+                else{
                     $('#cart_counter').html(response.cart_counter['cart_count'])
                     $('#qty-'+food_id).html(response.qty)
                 }
@@ -23,7 +30,7 @@ $(document).ready(function(){
         })
     })
 
-
+    
     // place the cart item quantity on load
     $('.item_qty').each(function(){
         var the_id = $(this).attr('id')
@@ -44,8 +51,13 @@ $(document).ready(function(){
             url: url,
             success : function(response){
                 console.log(response);
-                if(response.status == 'Failed'){
-                    console.log(response)
+                if(response.status == 'Login_Required'){
+                    swal(response.message,'','info').then(function(){
+                        window.location = '/login';
+                    })
+                }
+                else if(response.status == 'Failed'){
+                    swal(response.message,'','error')
                 }else{
                     $('#cart_counter').html(response.cart_counter['cart_count'])
                     $('#qty-'+food_id).html(response.qty)
