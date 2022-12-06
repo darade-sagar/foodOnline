@@ -17,6 +17,7 @@ def marketplace(request):
     }
     return render(request,'marketplace/listings.html', context)
 
+
 def vendor_detail(request, vendor_slug):
     vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
     categories = Category.objects.filter(vendor=vendor).prefetch_related(
@@ -100,4 +101,8 @@ def decrease_cart(request, food_id):
             return JsonResponse({'status':'failed', 'message':'Invalid Request'})
     else:
         return JsonResponse({'status':'Login_Required', 'message':'Please Login to continue'})
+
+
+def cart(request):
+    return render(request,'marketplace/cart.html')
 
