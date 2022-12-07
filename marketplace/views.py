@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from .context_processors import get_cart_counter
 
 from django.db.models import Prefetch
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def marketplace(request):
@@ -39,11 +40,11 @@ def vendor_detail(request, vendor_slug):
     }
     return render(request,'marketplace/vendor_detail.html',context)
 
-def add_to_cart(request,food_id):
-    # function to check if request is AJAX or not
-    def is_ajax(request):
-        return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+# function to check if request is AJAX or not
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
+def add_to_cart(request,food_id):
     # this function will be called from AJAX request.
     if request.user.is_authenticated:
         if is_ajax(request):
@@ -70,10 +71,6 @@ def add_to_cart(request,food_id):
         return JsonResponse({'status':'Login_Required', 'message':'Please Login to continue'})
 
 def decrease_cart(request, food_id):
-    # function to check if request is AJAX or not
-    def is_ajax(request):
-        return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
     # this function will be called from AJAX request.
     if request.user.is_authenticated:
         if is_ajax(request):
@@ -102,7 +99,7 @@ def decrease_cart(request, food_id):
     else:
         return JsonResponse({'status':'Login_Required', 'message':'Please Login to continue'})
 
-
+@login_required(login_url='/login') 
 def cart(request):
     cart_items = Cart.objects.filter(user=request.user)
     context = {
@@ -110,3 +107,23 @@ def cart(request):
     }
     return render(request,'marketplace/cart.html',context)
 
+def delete_cart(request,cart_id=None):
+    # this function will be called from AJAX request.
+    if request.user.is_authenticated:
+        if is_ajax(request):
+            # check if food item exists
+            try:
+                cart_item = Cart.objects.get(user=request.user,id=cart_id)
+                if cart_item:
+                    cart_item.delete()
+                    return JsonResponse({'status':'success', 'message':'Cart item has been deleted','cart_counter':get_cart_counter(request)})
+            except:
+                return JsonResponse({'status':'failed', 'message':'Cart Item does not exist!'})
+
+        else:
+            return JsonResponse({'status':'failed', 'message':'Invalid Request'})
+    else:
+        return JsonResponse({'status':'Login_Required', 'message':'Please Login to continue'})
+
+
+      
