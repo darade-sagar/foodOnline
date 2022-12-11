@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'vendor',
     'menu',
     'marketplace',
-    'cartApp',
 ]
 
 MIDDLEWARE = [

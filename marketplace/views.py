@@ -38,7 +38,7 @@ def vendor_detail(request, vendor_slug):
         'categories':categories,
         'cart_items':cart_items,
     }
-    return render(request,'marketplace/vendor_detail1.html',context)
+    return render(request,'marketplace/vendor_detail.html',context)
 
 # function to check if request is AJAX or not
 def is_ajax(request):
