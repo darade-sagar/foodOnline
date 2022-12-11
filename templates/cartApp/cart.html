@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<!-- Main Section Start -->
+<div class="main-section">
+    <div class="page-section pt-5">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#"><i class="icon- icon-shopping-cart" style="font-size:18px"></i>Cart Items</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="home" class="tab-pane in active">
+                                <div class="menu-itam-holder">
+                                    <h5 class="text-center p-5 " id="empty-cart" style="display:none;"> Cart is Empty! </h5>
+                                    <div id="menu-item-list-6272" class="menu-itam-list">
+
+                                        <ul>
+                                            {% if cart_items %}
+                                                {% for item in cart_items %}
+                                                <li> 
+                                                    <div class="image-holder"><img src="{{item.fooditem.image.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;"></div>
+                                                    <div class="text-holder">
+                                                        <h6>{{item.fooditem}}</h6>
+                                                        <span>{{item.fooditem.description}}</span>
+                                                        <a href="{% url 'vendor_detail' item.fooditem.vendor.vendor_slug %}" class="badge badge-warning">{{item.fooditem.vendor}}</a>
+                                                    </div>
+                                                    <div class="price-holder">
+                                                        <span class="price">Rs. {{item.fooditem.price}}/-</span>
+                                                        <a href="{% url 'dec_cart' item.id %}" class="decrease_cart1" style="margin-right:28px"><i class="icon-minus3 text-color"></i></a>
+                                                        <label>{{item.quantity}}</label>
+                                                        <a href="{% url 'inc_cart' item.id %}" class="add_to_cart1" ><i class="icon-plus4 text-color"></i></a>
+                                                        <a href="{% url 'delete_cart' item.id %}" class="delete_cart1" ><i class="icon-delete text-color"></i></a>
+                                                    </div>
+                                                </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <h5 class="text-center p-5"> Cart is Empty! </h5>
+                                            {% endif %}
+
+                                        </ul>
+                                            
+                                    </div>
+
+                                    {% for item in cart_items %}
+                                        <span class="item_qty d-none">{{item.quantity}}</span>
+                                    {% endfor %}
+
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <!--Your Order Section-->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#"><i class="icon- icon-room_service"></i>Your Orders</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane in active">
+                                <div class="menu-itam-holder pb-1">
+                                <div>
+                                    <ul>
+                                        <li style="list-style-type: none;">
+                                            Subtotal
+                                            <span class="price float-right">
+                                                <span class="currency">Rs</span>
+                                                <span>{{subtotal1}}</span>
+                                            </span>
+                                        </li>
+                                        <li style="list-style-type: none;">
+                                            Tax
+                                            <span class="price float-right">
+                                                <span class="currency">Rs</span>
+                                                <span>{{tax1}}</span>
+                                            </span>
+                                        </li>
+                                        <li style="list-style-type: none; font-weight: 600;">
+                                            Total
+                                            <span class="price float-right">
+                                                <span class="currency">Rs</span>
+                                                <span>{{total1}}</span>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <!--Your Order Section-->
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Section End -->
+
+{% include 'includes/alerts.html' %}
+{% endblock content %}

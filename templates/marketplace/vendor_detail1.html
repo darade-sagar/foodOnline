@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filter %}
+{% block content %}
+
+
+<!-- Main Section Start -->
+<div class="main-section">
+    <div class="page-section restaurant-detail-image-section" style=" background: url({% if vendor.user_profile.cover_photo %} {{vendor.user_profile.cover_photo.url}} {% else %} {% static 'images/default-cover.png' %} {% endif %}) no-repeat scroll 0 0 / cover;">
+        <!-- Container Start -->
+        <div class="container">
+            <!-- Row Start -->
+            <div class="row">
+                <!-- Column Start -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="company-info-detail">
+                        <div class="company-info">
+                            <div class="img-holder">
+                                <figure>
+                                    {% if vendor.user_profile.profile_picture %}
+                                    <img src="{{vendor.user_profile.profile_picture.url}}" class="img-thumb wp-post-image" alt=""/>
+                                    {% else %}
+                                    <img src="{% static 'images/default-profile.png' %}" class="img-thumb wp-post-image" alt=""/>
+                                    {% endif %}
+                                </figure>
+                            </div>
+                            <div class="text-holder mt-2">
+                                <span class="restaurant-title">{{vendor.vendor_name}}</span>
+                                <div class="text">
+                                        {% if vendor.user_profile.address %}
+                                        <i class="icon-location"></i>
+                                        <p>{{vendor.user_profile.address}}</p>
+                                        {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="delivery-timing reviews-sortby">
+                            
+                            <ul>
+                                <li>
+                                    <a href="#" class="reviews-sortby-active">
+                                        <span>Today :</span>
+                                        11:00 am - 11:00 pm <i class="icon-chevron-small-down"></i>
+                                    </a>
+                                    <ul class="delivery-dropdown">
+                                        <li><a href="#"><span class="opend-day">Monday</span> <span class="opend-time"><small>:</small> 11:00 am - 11:00
+                                                    pm</span></a></li>
+                                        <li><a href="#"><span class="opend-day">Tuesday</span> <span class="opend-time"><small>:</small> 11:00 am - 11:00
+                                                    pm</span></a></li>
+                                        <li><a href="#"><span class="opend-day">Wednesday</span> <span class="opend-time"><small>:</small> 11:00 am - 11:00
+                                                    pm</span></a></li>
+                                        <li><a href="#"><span class="opend-day">Thursday</span> <span class="opend-time"><small>:</small> 11:00 am - 11:00
+                                                    pm</span></a></li>
+                                        <li><a href="#"><span class="opend-day">Friday</span> <span class="opend-time"><small>:</small> 11:00 am - 11:00
+                                                    pm</span></a></li>
+                                        <li><a href="#"><span class="opend-day">Saturday</span> <span class="opend-time"><small>:</small> 11:00 am - 11:00
+                                                    pm</span></a></li>
+                                        <li><a href="#"><span class="opend-day">Sunday</span> <span class="opend-time close-day"><small>:</small>Closed</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column End -->
+            </div>
+            <!-- Row End -->
+        </div>
+        <!-- Container End -->
+    </div>
+
+    <div class="page-section">
+        <div class="container">
+            <div class="row">
+                <!--Category Section-->
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 sticky-sidebar">
+                    <div class="filter-wrapper">
+                        <div class="categories-menu">
+                            <h6><i class="icon-restaurant_menu"></i>Categories</h6>
+                            <ul class="menu-list">
+                                {% for category in categories %}
+                                    <li class="active"><a href="#" class="menu-category-link"> {{category}} </a></li>
+                                {% endfor %}                              
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--Category Section-->
+
+                <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-room_service"></i>Menu</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="home" class="tab-pane in active">
+                                <div class="menu-itam-holder pb-1">
+                                    <div id="menu-item-list-6272" class="menu-itam-list">
+                                        {% if categories|length == 0 %}
+                                            <h5 class="text-center mt-2"> No Category Found! </h5>
+                                        {% endif %}
+
+                                        {% for category in categories %}
+                                            <div class="element-title mt-3 mb-3" id="menu-category-2">
+                                                <h5 class="text-color">{{category}}</h5>
+                                                <span>{{category.description}}</span>
+                                            </div>
+                                            <ul>
+                                                {% if category.fooditems.all|length > 0 %}
+                                                    {% for food in category.fooditems.all %}
+                                                    <li>
+                                                        <div class="image-holder"><img src="{{food.image.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;"></div>
+                                                        <div class="text-holder">
+                                                            <h6>{{food}}</h6>
+                                                            <span>{{food.description}}</span>
+                                                        </div>
+                                                        <div class="price-holder">
+                                                            <span class="price">Rs. {{food.price}}/-</span>
+                                                            <a href="{% url 'dec_cart' food.id %}" class="decrease_cart1" style="margin-right:28px"><i class="icon-minus3 text-color"></i></a>
+                                                            <label>{{cart_items|quantity:food.id}}</label>
+                                                            <a href="{% url 'inc_cart' cart_items|itemid:food.id %}" class="add_to_cart1" ><i class="icon-plus4 text-color"></i></a>
+                                                            <a href="{% url 'delete_cart' food.id %}" class="delete_cart1" ><i class="icon-delete text-color"></i></a>
+                                                        </div>
+                                                    </li>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <h5 class="text-center"> No Menu Found! </h5>
+                                                {% endif %}          
+                                            </ul>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for item in cart_items %}
+                                        <span id="qty-{{item.fooditem.id}}" class="item_qty d-none" data-qty="{{item.quantity}}">{{item.quantity}}</span>
+                                    {% endfor %}
+
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Section End -->
+
+{% include 'includes/alerts.html' %}
+{% endblock content %}
