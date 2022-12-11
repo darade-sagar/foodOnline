@@ -92,8 +92,9 @@ def add_category(request):
             category_form.vendor = get_vendor(request)
 
             # to ensure we have unique slug
-            category_form.slug = slugify(category_name)
-            form.save()
+            category_form.save()
+            category_form.slug = slugify(category_name) +"-"+str(category_form.id)
+            category_form.save()
             messages.success(request,'Category Added Successfully!')
             return redirect(menu_builder)
             
@@ -164,7 +165,8 @@ def add_food(request):
             food_form.vendor = get_vendor(request)
 
             # to ensure we have unique slug
-            food_form.slug = slugify(food_title)
+            food_form.save()
+            food_form.slug = slugify(food_title)+"-"+str(food_form.id)
             food_form.save()
             messages.success(request,'Food Item Added Successfully!')
             return redirect(fooditems_by_category, food_form.category_name.id)

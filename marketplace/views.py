@@ -127,3 +127,12 @@ def delete_cart(request,cart_id=None):
     else:
         return JsonResponse({'status':'Login_Required', 'message':'Please Login to continue'})
 
+def search(request):
+    rest_name = request.GET['rest_name']
+    address = request.GET['location']
+    print(rest_name,address)
+    vendors = Vendor.objects.all()
+    context = {
+        'vendors':vendors,
+    }
+    return render(request,'marketplace/listings.html',context)
