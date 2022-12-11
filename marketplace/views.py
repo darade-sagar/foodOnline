@@ -101,7 +101,7 @@ def decrease_cart(request, food_id):
 
 @login_required(login_url='/login') 
 def cart(request):
-    cart_items = Cart.objects.filter(user=request.user)
+    cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
     context = {
         'cart_items':cart_items,
     }
@@ -117,6 +117,8 @@ def delete_cart(request,cart_id=None):
                 if cart_item:
                     cart_item.delete()
                     return JsonResponse({'status':'success', 'message':'Cart item has been deleted','cart_counter':get_cart_counter(request)})
+                else:
+                    return JsonResponse({'status':'success', 'message':'Cart does not exist'})
             except:
                 return JsonResponse({'status':'failed', 'message':'Cart Item does not exist!'})
 
