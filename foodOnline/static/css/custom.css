@@ -27,3 +27,19 @@
   font-size: 12px;
   cursor: pointer;
 }
+
+.table td, table > tbody > tr > td {
+  border: none; 
+  width: 500px;
+  align-items: left;
+  
+}
+
+#opening_hours select{
+  padding: 5px 5px !important;
+}
+
+.btn-success.add_hpur{
+  padding: 7px 15px 7px 15px;
+}
+

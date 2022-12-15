@@ -1,7 +1,8 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 
 # User import
-from vendor.forms import VendorForm
+from vendor.forms import VendorForm,OpeningHourForm
+from .models import OpeningHour
 from accounts.forms import UserProfileForm
 from accounts.models import UserProfile
 from vendor.models import Vendor
@@ -16,6 +17,8 @@ from django.template.defaultfilters import slugify
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Prefetch
+from django.db import IntegrityError
+from django.http import JsonResponse
 
 def get_vendor(request):
     vendor = Vendor.objects.get(user=request.user)
@@ -221,3 +224,69 @@ def delete_food(request,pk=None):
     food.delete()
     messages.success(request,'Fod Item has been deleted successfuly!')
     return redirect(fooditems_by_category, food.category_name.id) #type:ignore
+
+
+
+# _______________________________________________________________
+'''Opening hours logic'''
+
+# function to check if request is AJAX or not
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+def opening_hours(request):
+    opening_hours = OpeningHour.objects.filter(vendor = get_vendor(request))
+    form = OpeningHourForm()
+
+    context = {
+        'form':form,
+        'opening_hours':opening_hours,
+    }
+    return render(request,'vendor/opening_hours.html',context)
+
+
+def add_opening_hours(request):
+    # save data coming from ajax into db
+    if request.user.is_authenticated:
+        if is_ajax(request) and request.method == "POST":
+            day = int(request.POST.get('day'))
+            from_hour = request.POST.get('from_hour')
+            to_hour = request.POST.get('to_hour')
+            is_closed = request.POST.get('is_closed') == 'true' 
+
+            try:
+                hour = OpeningHour.objects.create(vendor=get_vendor(request),day=day, from_hour=from_hour,to_hour=to_hour,is_closed=is_closed)            
+                day = OpeningHour.objects.get(id=hour.id) #type:ignore
+                if day.is_closed:
+                    response = {
+                        'status': 'success',
+                        'id':hour.id, #type:ignore
+                        'day':str(hour),
+                        'is_closed':'Closed',
+                    }
+                else:
+                    response = {
+                        'status': 'success',
+                        'id':hour.id, #type:ignore
+                        'day':str(hour),
+                        'from_hour':hour.from_hour,
+                        'to_hour':hour.to_hour,
+                    }
+                return JsonResponse(response)
+
+            except IntegrityError as e:
+                response = {'status': 'failed'}
+                return JsonResponse(response)
+        else:
+            return HttpResponse('Invalid Request')
+    return HttpResponse("Opening hours")
+
+
+def remove_opening_hours(request,pk):
+    if request.user.is_authenticated:
+        if is_ajax(request):
+            hour = get_object_or_404(OpeningHour,pk=pk)
+            hour.delete()
+            return JsonResponse({'status':'success','id':pk})
+
+    return HttpResponse() #Ignore
