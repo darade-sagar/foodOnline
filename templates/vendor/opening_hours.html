@@ -25,13 +25,15 @@
                             
                             <table class="table opening_hours">
                                 <tbody>
+                                    {% if opening_hours|length == 0 %}
+                                        <h5 class="text-center pt-2">Schedule Your Opening Timings!</h5>
+                                    {% endif %}
                                     {% for hour in opening_hours %}
                                         <tr id="hour-{{hour.id}}">
                                             <td><b>{{hour}}</b></td>
                                             <td>{% if hour.is_closed %}Closed{% else %}{{hour.from_hour}} : {{hour.to_hour}} {% endif %}</td>
                                             <td><a href="#" class="remove-hour" data-url="{% url 'remove_opening_hours' hour.id %}">Remove</a></td>
                                         </tr>
-                                         
                                     {% endfor %}
                                 </tbody>
                             </table>

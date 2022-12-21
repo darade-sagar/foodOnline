@@ -2,6 +2,8 @@ from django.db import models
 from accounts.models import User, UserProfile
 from accounts.utils import send_notification
 
+from datetime import date, datetime
+
 # Create your models here.
 class Vendor(models.Model):
     user = models.OneToOneField(User,related_name='user', on_delete=models.CASCADE)
@@ -15,6 +17,26 @@ class Vendor(models.Model):
 
     def __str__(self):
         return self.vendor_name
+
+    def is_open(self):
+        # Check current day opening hours
+        today_date = date.today()
+        today = today_date.isoweekday()
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        is_open = None
+
+        current_opening_hours = OpeningHour.objects.get(vendor=self,day=today)
+        if current_opening_hours.is_closed:
+            is_open = False
+        else:
+            start_time = str(datetime.strptime(current_opening_hours.from_hour,"%I:%M %p").time())
+            end_time = str(datetime.strptime(current_opening_hours.to_hour,"%I:%M %p").time())
+            if current_time > start_time and current_time < end_time:
+                is_open = True
+            else:
+                is_open = False
+        return is_open
 
     def save(self, *args, **kwargs):
         if self.pk is not None:
@@ -103,14 +125,14 @@ HOUR_OF_DAY_24 = [
 
 class OpeningHour(models.Model):
     vendor = models.ForeignKey(Vendor,on_delete=models.CASCADE)
-    day = models.IntegerField(choices=DAYS,unique=True)
+    day = models.IntegerField(choices=DAYS)
     from_hour = models.CharField(choices=HOUR_OF_DAY_24, max_length=10, blank=True)
     to_hour = models.CharField(choices=HOUR_OF_DAY_24, max_length=10, blank=True)
     is_closed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('day','-from_hour')
-        unique_together = ('day','from_hour','to_hour')
+        unique_together = ('vendor','day')
         
     def __str__(self):
         val = DAYS[self.day-1][1]

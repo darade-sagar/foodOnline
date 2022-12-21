@@ -35,12 +35,14 @@
                                                         {% endif %}
                                                     </a>
                                                 </figure>
-                                                <span class="restaurant-status close"><em class="bookmarkRibbon"></em>Close</span>
+                                                {% comment %} <span class="restaurant-status close"><em class="bookmarkRibbon"></em>{% if not vendor.is_open %}Closed {% else %}Open{% endif %}</span> {% endcomment %}
                                             </div>
                                             <div class="text-holder">
                                                 <div class="post-title">
                                                     <h5>
                                                         <a href="{% url 'vendor_detail' vendor.vendor_slug %}">{{vendor.vendor_name}}</a>
+                                                        <span class="badge badge-success">{% if vendor.is_open %}Open{% endif %}</span>
+                                                        <span class="badge badge-danger">{% if not vendor.is_open %}Closed{% endif %}</span>
                                                     </h5>
                                                 </div>
                                                 {% if vendor.user_profile.address %}
