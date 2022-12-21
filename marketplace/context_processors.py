@@ -17,6 +17,7 @@ def get_cart_counter(request):
 
 def get_cart_amounts(request):
     subtotal,grand_total=0,0
+    tax_dict = {}
     if request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user)
         for item in cart_items:
@@ -24,7 +25,6 @@ def get_cart_amounts(request):
             subtotal += fooditem.price*item.quantity
 
         get_tax = Tax.objects.filter(is_active=True)
-        tax_dict = {}
         total_tax = 0
         for i in get_tax:
             tax_type = i.tax_type 
@@ -38,4 +38,4 @@ def get_cart_amounts(request):
 
         grand_total += subtotal + total_tax 
 
-    return dict(subtotal=subtotal,tax_dict=tax_dict, grand_total=grand_total) #type:ignore
+    return dict(subtotal=subtotal,tax_dict=tax_dict, grand_total=grand_total)
