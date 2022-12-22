@@ -105,7 +105,8 @@ class UserProfile(models.Model):
 
 
     def __str__(self):
-        return self.user.email  #type:ignore
+        val = self.user.email #type:ignore
+        return val
 
     def full_address(self):
         return f'{self.address}, {self.city}, {self.pincode}'
