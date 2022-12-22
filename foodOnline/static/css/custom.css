@@ -39,7 +39,10 @@
   padding: 5px 5px !important;
 }
 
-.btn-success.add_hpur{
+.btn-success.add_hour{
   padding: 7px 15px 7px 15px;
 }
 
+.item-price{
+  padding: 0px;
+}
