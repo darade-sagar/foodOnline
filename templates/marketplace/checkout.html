@@ -19,7 +19,7 @@
                                 <div class="menu-itam-holder">
                                     
                                     <div id="menu-item-list-6272" class="menu-itam-list">
-                                        <form action="" method="post">
+                                        <form action="{% url 'place-order' %}" method="post">
                                             {% csrf_token %}
                                             <div class="row">
                                                 <div class="form-group col-md-6 col-sm-12 col-lg-6">
@@ -72,45 +72,40 @@
                                     <div id="menu-item-list-6272" class="menu-itam-list">
 
                                         <ul>
-                                            {% if cart_items %}
-                                                {% for item in cart_items %}
-                                                <li id="cart-item-{{item.id}}"> 
-                                                    <div class="row">
-                                                        <div class="col-7 mt-2 mb-2" style="padding:0px;">
-                                                            <div class="image-holder"><img src="{{item.fooditem.image.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;"></div>
-                                                            <div class="text-holder">
-                                                                <h6>{{item.fooditem}}</h6>
-                                                                <span>{{item.fooditem.description}}</span>
-                                                                <a href="{% url 'vendor_detail' item.fooditem.vendor.vendor_slug %}" class="badge badge-warning">{{item.fooditem.vendor}}</a>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <div class="quantity" style="display:inline-block; position:absolute; top:50%; transform:translateY(-50%); margin-top:-10px">
-                                                                <span>{{item.quantity}} QTY </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-3">
-                                                            <div class="price-holder">
-                                                                <span class="price">Rs. {{item.fooditem.price}}/-</span>
-                                                            </div>
+                                            {% for item in cart_items %}
+                                            <li id="cart-item-{{item.id}}"> 
+                                                <div class="row">
+                                                    <div class="col-7 mt-2 mb-2" style="padding:0px;">
+                                                        <div class="image-holder"><img src="{{item.fooditem.image.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;"></div>
+                                                        <div class="text-holder">
+                                                            <h6>{{item.fooditem}}</h6>
+                                                            <span>{{item.fooditem.description}}</span>
+                                                            <a href="{% url 'vendor_detail' item.fooditem.vendor.vendor_slug %}" class="badge badge-warning">{{item.fooditem.vendor}}</a>
                                                         </div>
                                                     </div>
-                                                </li>
-                                                {% endfor %}
-                                            {% else %}
-                                                <h5 class="text-center p-5"> Cart is Empty! </h5>
-                                            {% endif %}
-
+                                                    <div class="col-2">
+                                                        <div class="quantity" style="display:inline-block; position:absolute; top:50%; transform:translateY(-50%); margin-top:-10px">
+                                                            <span>{{item.quantity}} QTY </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="price-holder">
+                                                            <span class="price">Rs. {{item.fooditem.price}}/-</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
                                         </ul>
-                                            
                                     </div>
                                     <div>
+                                        <hr>
                                         <ul>
                                             <li style="list-style-type: none;">
                                                 Subtotal
                                                 <span class="price float-right">
                                                     <span class="currency">Rs</span>
-                                                    <span id="subtotal">{{subtotal}}</span>
+                                                    <span id="subtotal">{{subtotal}} /-</span>
                                                 </span>
                                             </li>
                                             {% for key,value in tax_dict.items %}
@@ -119,7 +114,7 @@
                                                         {{key}} ({{i}} %)
                                                         <span class="price float-right">
                                                             <span class="currency">Rs</span>
-                                                            <span id="tax-{{key}}">{{k}}</span>
+                                                            <span id="tax-{{key}}">{{k}} /-</span>
                                                         </span>
                                                     </li>
                                                 {% endfor %}
@@ -128,11 +123,28 @@
                                                 Total
                                                 <span class="price float-right">
                                                     <span class="currency">Rs</span>
-                                                    <span id="total">{{grand_total}}</span>
+                                                    <span id="total">{{grand_total}} /-</span>
                                                 </span>
                                             </li>
 
-                                            <button type="submit" href="#" class="btn btn-danger w-100 mt-3 p-2">PLACE ORDER</button>
+                                            <!--Select Payment Method-->
+                                            <div class="payment-method m-4">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <label for="">
+                                                            <input type="radio" onclick="notify()" class="form-check-input" name="payment_method" id="" value="PayPal">
+                                                            <img src="{% static 'images/PayPal.png' %}" style="" alt="PayPal" width="100" height="26">
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label for="">
+                                                            <input type="radio" onclick="notify()" class="form-check-input" name="payment_method" id="" value="RazorPay">
+                                                            <img src="{% static 'images/razorpay_logo.png' %}" style="" alt="RazorPay" width="100" height="30">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button onclick="return checkPaymentMethod()" type="submit" href="#" class="btn btn-danger w-100 mt-3 p-2">PLACE ORDER</button>
                                             <!--End form here-->
                                         </form>
                                         </ul>
@@ -151,6 +163,22 @@
     </div>
 </div>
 <!-- Main Section End -->
-
 {% include 'includes/alerts.html' %}
+
+<script>
+    function notify(){
+        var paymethod = $("input[name='payment_method']:checked").val()
+        var notification = 'You have selected '+ paymethod
+        swal(notification,"",'success')
+    }
+
+    function checkPaymentMethod(){
+        var paymethod = $("input[name='payment_method']:checked").val()
+        if(!paymethod){
+            swal('Please select payment method','','error')
+            return false
+        }
+        return true
+    }
+</script>
 {% endblock content %}

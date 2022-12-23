@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<!-- Main Section Start -->
+<div class="main-section">
+    <div class="page-section pt-5">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-shopping-cart" style="font-size:18px"></i>Review Your Billing Address</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="home" class="tab-pane in active">
+                                <div class="menu-itam-holder">
+                                    <div id="menu-item-list-6272" class="menu-itam-list">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!--Your Order Section-->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-room_service"></i>Your Orders</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="home" class="tab-pane in active">
+                                <div class="menu-itam-holder pb-1">
+                                <div>
+                                    <ul>
+                                        <li style="list-style-type: none;">
+                                            Subtotal
+                                            <span class="price float-right">
+                                                <span class="currency">Rs</span>
+                                                <span id="subtotal">{{subtotal}}</span>
+                                            </span>
+                                        </li>
+                                        {% for key,value in tax_dict.items %}
+                                            {% for i,k in value.items  %}
+                                                <li style="list-style-type: none;">
+                                                    {{key}} ({{i}} %)
+                                                    <span class="price float-right">
+                                                        <span class="currency">Rs</span>
+                                                        <span id="tax-{{key}}">{{k}}</span>
+                                                    </span>
+                                                </li>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        <li style="list-style-type: none; font-weight: 600;">
+                                            Total
+                                            <span class="price float-right">
+                                                <span class="currency">Rs</span>
+                                                <span id="total">{{grand_total}}</span>
+                                            </span>
+                                        </li>
+
+                                        <a href="{% url 'checkout' %}" class="btn btn-danger w-100 mt-3 p-2">PROCEED TO CHECKOUT</a>
+                                    </ul>
+                                </div>
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <!--Your Order Section-->
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Section End -->
+
+{% include 'includes/alerts.html' %}
+{% endblock content %}
