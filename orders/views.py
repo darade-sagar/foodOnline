@@ -1,8 +1,8 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from marketplace.models import Cart
 from marketplace.context_processors import get_cart_amounts
 from .forms import OrderForm
-from .models import Order
+from .models import Order,Payment, OrderedFood
 from django.contrib import messages
 from .utils import generate_order_number
 
@@ -41,8 +41,57 @@ def place_order(request):
             order.save() #It will generate id
             order.order_number = generate_order_number(order.id) #type:ignore
             order.save()
-            messages.success(request,f'Order {order.order_number} Placed Successfully')
-
+            context ={
+                'order':order,
+                'cart_items':cart_items,
+            }
+            return render(request,'orders/place-order.html',context)
         else:
             print(form.errors)
     return render(request,'orders/place-order.html')
+
+# function to check if request is AJAX or not
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+def payments(request):
+    # check if request is Ajax
+    if is_ajax(request) and request.method=="POST":
+
+        # Store Payment details in Payment Model
+        order_number = request.POST['order_number']
+        transaction_id = request.POST['transaction_id']
+        payment_method = request.POST['payment_method']
+        status = request.POST['status']
+        order = Order.objects.get(user=request.user,order_number=order_number)
+        payment = Payment(
+            user=request.user,
+            transaction_id=transaction_id,
+            payment_method = payment_method,
+            amount = order.total,
+            status = status
+        )
+        payment.save()
+
+        # Update the order model
+        order.payment = payment
+        order.is_ordered =True
+        order.save()
+
+        # move order to old ordered foods model
+        cart_items = Cart.objects.filter(user=request.user)
+        for item in cart_items:
+            ordered_food = OrderedFood()
+            ordered_food.order = order
+            ordered_food.payment = payment
+            ordered_food.user = request.user
+            ordered_food.fooditem = item.fooditem
+            ordered_food.quantity = item.quantity
+            ordered_food.price = item.fooditem.price #type:ignore
+            ordered_food.amount = item.fooditem.price * item.quantity #type:ignore
+            ordered_food.save()
+        
+        return HttpResponse("Saved Food")
+
+
+    return HttpResponse("PaymentPage")

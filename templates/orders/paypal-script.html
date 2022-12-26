@@ -1,0 +1,81 @@
+<!--PAYPAL JAVASCRIPT-->
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var grand_total = "{{grand_total}}"
+    var url = "{% url 'payments' %}"
+    var order_number = "{{order.order_number}}"
+    const csrftoken = getCookie('csrftoken');
+    console.log("CSRF==> ",csrftoken)
+    
+    function initPayPalButton() {
+      paypal.Buttons({
+        style: {
+          shape: 'rect',
+          color: 'gold',
+          layout: 'vertical',
+          label: 'paypal',
+          
+        },
+  
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{"amount":{"currency_code":"USD","value":grand_total}}]
+          });
+        },
+  
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(orderData) {
+            console.log(orderData);
+            var transactionId = orderData.purchase_units[0].payments.captures[0].id;
+            var status = orderData.status 
+            var payment_method = 'PayPal'
+            sendTransaction(transactionId,payment_method,status)
+            const element = document.getElementById('paypal-button-container');
+            element.innerHTML = '';
+            element.innerHTML = '<h3>Thank you for your payment!</h3>';
+            swal('Thank you for your payment!','Payment ID: '+ transactionId ,'success')
+  
+            // Or go to another URL:  actions.redirect('thank_you.html');
+            
+          });
+        },
+  
+        onError: function(err) {
+          console.log(err);
+        }
+      }).render('#paypal-button-container');
+    }
+    /*Send Ajax Request to store in DB*/
+    function sendTransaction(transactionId,payment_method,status){
+        $.ajax({
+            type:'POST',
+            url:url,
+            data:{
+                'order_number': order_number,
+                'transaction_id':transactionId,
+                'payment_method':payment_method,
+                'status':status,
+                'csrfmiddlewaretoken':csrftoken,
+            },
+            success: function(response){
+                console.log('response===>',response)
+            }
+        })
+    }
+    
+    initPayPalButton();
+</script>
