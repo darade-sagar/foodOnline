@@ -37,5 +37,6 @@ def send_notification(mail_subject,template,context):
     from_email = settings.DEFAULT_FROM_EMAIL
     message = render_to_string(template,context)
     to_emails = context['to_email']
-    mail = EmailMessage(mail_subject, message, from_email=from_email,to=to_emails)
-    mail.send()
+    for id in to_emails:
+        mail = EmailMessage(mail_subject, message, from_email=from_email,to=[id])
+        mail.send()

@@ -6,6 +6,7 @@ from .models import Order,Payment, OrderedFood
 from django.contrib import messages
 from .utils import generate_order_number
 from accounts.utils import send_notification
+from django.http import JsonResponse
 
 # Create your views here.
 def place_order(request):
@@ -102,7 +103,25 @@ def payments(request):
             'to_email':to_mails,
         }
         send_notification(mail_subject,template,context)
-        return HttpResponse("Saved Food")
 
+        # Send Notifications to customer
+        mail_subject='Order Confirmation | foodOnline'
+        template='orders/order_confirmation.html'
+        to_mails = [request.user.email]
+        context={
+            'order':order,
+            'to_email':to_mails,
+            'user':request.user,
+        }
+        send_notification(mail_subject,template,context)
 
+        # Clear the cart
+        # cart_items.delete()
+
+        # redirect order completion page
+        response = {
+            'order_number':order_number,
+            'transaction_id':transaction_id
+        }
+        return JsonResponse(response)
     return HttpResponse("PaymentPage")

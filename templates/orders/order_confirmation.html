@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+Hi {{user.first_name}},
+
+Your order requirement is received in foodOnline. You will get your order soon.
+Transaction_ID: {{order.payment.transaction_id}}
+
+{% endautoescape %}
