@@ -5,6 +5,7 @@ from .forms import OrderForm
 from .models import Order,Payment, OrderedFood
 from django.contrib import messages
 from .utils import generate_order_number
+from accounts.utils import send_notification
 
 # Create your views here.
 def place_order(request):
@@ -90,7 +91,17 @@ def payments(request):
             ordered_food.price = item.fooditem.price #type:ignore
             ordered_food.amount = item.fooditem.price * item.quantity #type:ignore
             ordered_food.save()
-        
+
+        # Send Notifications to each vendor
+        mail_subject='You have received new Order | foodOnline'
+        template='orders/new_order_received.html'
+        to_mails = list(set([i.fooditem.vendor.user.email for i in cart_items ]))
+        print(to_mails)
+        context={
+            'order':order,
+            'to_email':to_mails,
+        }
+        send_notification(mail_subject,template,context)
         return HttpResponse("Saved Food")
 
 
