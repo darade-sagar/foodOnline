@@ -125,3 +125,26 @@ def payments(request):
         }
         return JsonResponse(response)
     return HttpResponse("PaymentPage")
+
+def order_complete(request):
+    order_number = request.GET.get('order_no')
+    transaction_id = request.GET.get('trans_id')
+    try:
+        order = Order.objects.get(order_number=order_number,payment__transaction_id=transaction_id, is_ordered=True)
+        ordered_food = OrderedFood.objects.filter(order=order)
+
+        # find subtotal,tax,total to show in order complete page
+        subtotal = 0
+        for item in ordered_food:
+            subtotal += (item.price*item.quantity)
+        tax_dict = order.tax_data
+        
+        context = {
+            'order':order,
+            'ordered_food':ordered_food,
+            'subtotal':subtotal,
+            'tax_dict':tax_dict,
+        }
+        return render(request,'orders/order_complete.html',context)
+    except:
+        return redirect('home')
