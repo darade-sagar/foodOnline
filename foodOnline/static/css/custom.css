@@ -28,12 +28,12 @@
   cursor: pointer;
 }
 
-.table td, table > tbody > tr > td {
+/* .table td, table > tbody > tr > td {
   border: none; 
   width: 500px;
   align-items: left;
   
-}
+} */
 
 #opening_hours select{
   padding: 5px 5px !important;
