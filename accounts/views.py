@@ -148,11 +148,11 @@ def vendorDashboard(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_customer)
 def custDashboard(request):
-    order = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
+    orders = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
     context ={
-        'orders':order,
-        'recent_orders':order[:5],
-        'orders_count':order.count(),
+        'orders':orders,
+        'recent_orders':orders[:5],
+        'orders_count':orders.count(),
     }
     return render(request,'accounts/custDashboard.html',context)
 
