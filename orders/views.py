@@ -116,7 +116,12 @@ def payments(request):
         send_notification(mail_subject,template,context)
 
         # Clear the cart
-        # cart_items.delete()
+        cart_items.delete()
+
+        # Clear orders which dont have any payment
+        orders_without_payment = Order.objects.filter(user=request.user,is_ordered=False)
+        for order in orders_without_payment:
+            order.delete()
 
         # redirect order completion page
         response = {

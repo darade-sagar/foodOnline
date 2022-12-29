@@ -35,6 +35,10 @@ def cprofile(request):
     return render(request,'customers/cprofile.html',context)
 
 def my_orders(request):
+    # if request.GET.get('q'):
+    #     order = Order.objects.filter(user=request.user,is_ordered=True,status=request.GET.get('q')).order_by('-created_at')
+    # else:
+    #     order = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
     order = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
     context ={
         'orders':order,
@@ -43,7 +47,7 @@ def my_orders(request):
 
 def order_detail(request,order_number):
     try:
-        order = Order.objects.get(order_number=order_number,user=request.user,is_ordered=True)
+        order = Order.objects.get(order_number=order_number,user=request.user)
         ordered_food = OrderedFood.objects.filter(order=order)
 
         # find subtotal,tax,total to show in order complete page
