@@ -18,32 +18,7 @@
                 <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                     <div class="user-dashboard loader-holder">
                         <div class="user-holder">
-                            <h5 class="text-uppercase">Overview</h5>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                    <div class="card">
-                                        <div class="card-header text-center">
-                                            Total Orders
-                                        </div>
-                                        <div class="card-body text-center">
-                                            <a href="#"><h5 class="card-title">{{orders_count}}</h5></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-8 col-md-8  col-sm-12 col-xs-12">
-                                    <div class="card">
-                                        <div class="card-header text-center">
-                                            Logged in as: <b>{{user.email | lower}}</b>
-                                        </div>
-                                        <div class="card-body text-center">
-                                            <a href="{% url 'cprofile' %}"><h5 class="card-title"> <i class="fa fa-edit" ></i> Edit Profile</h5></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            
-                            <h5 class="text-uppercase mt-5 mb-5">Recent Orders</h5>
+                            <h5 class="text-uppercase mb-3">My Orders</h5>
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="user-orders-list">
@@ -60,7 +35,7 @@
                                                   </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {% for order in recent_orders %}
+                                                    {% for order in orders %}
                                                     <tr>
                                                         <td scope="row">{{order.order_number}}</td>
                                                         <td>{{order.name | title}}</td>
@@ -68,11 +43,29 @@
                                                         <td>{{order.status}}</td>
                                                         <td>{{order.created_at}}</td>
                                                         <td><a href="#" class="btn btn-danger">Details</a></td>
-                                                        
                                                     </tr>
                                                     {% endfor %}
                                                 </tbody>
                                               </table>
+                                              <!--Need Pagination-->
+                                              <nav aria-label="Page navigation">
+                                                <ul class="pagination justify-content-center">
+                                                  <li class="page-item disabled">
+                                                    <a class="page-link" href="#" aria-label="Previous">
+                                                      <span aria-hidden="true">&laquo;</span>
+                                                      <span class="sr-only">Previous</span>
+                                                    </a>
+                                                  </li>
+                                                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                  <li class="page-item">
+                                                    <a class="page-link" href="#" aria-label="Next">
+                                                      <span aria-hidden="true">&raquo;</span>
+                                                      <span class="sr-only">Next</span>
+                                                    </a>
+                                                  </li>
+                                                </ul>
+                                              </nav>
                                         </div>												
                                     </div>
                                 </div>
