@@ -10,6 +10,8 @@ from accounts.customDecorator import check_role_vendor
 from menu.models import Category, FoodItem
 
 from menu.forms import CategoryForm, FoodItemForm
+from orders.models import Order,OrderedFood
+from marketplace.models import Tax
 
 
 # package import
@@ -290,3 +292,32 @@ def remove_opening_hours(request,pk):
             return JsonResponse({'status':'success','id':pk})
 
     return HttpResponse() #Ignore
+
+def order_detail(request,order_number):
+    try:
+        order = Order.objects.get(order_number=order_number,is_ordered=True)
+        ordered_food = OrderedFood.objects.filter(order=order,fooditem__vendor=get_vendor(request))
+
+        grand_total,subtotal = 0,0
+        taxes = Tax.objects.filter(is_active=True)
+        for fooditem in ordered_food:
+            subtotal += (fooditem.price*fooditem.quantity)
+
+        grand_total += subtotal
+        tax_dict = {}
+        for tax in taxes:
+            amount = (subtotal*float(tax.tax_percentage))/100 
+            tax_dict[tax.tax_type]= {tax.tax_percentage:amount}
+            grand_total += amount
+
+        context = {
+            'order':order,
+            'ordered_food':ordered_food,
+            'subtotal':subtotal,
+            'tax_dict':tax_dict,
+            'grand_total':grand_total,
+        }
+        
+    except:
+        return HttpResponse("Error")
+    return render(request,'vendor/order_detail.html',context)
