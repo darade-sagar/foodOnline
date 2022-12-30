@@ -45,8 +45,8 @@ class Order(models.Model):
     pin_code = models.CharField(max_length=10)
 
     total = models.FloatField()
-    tax_data = models.JSONField(blank=True, help_text = "Data format: {'tax_type':{'tax_percentage':'tax_amount'}}",null=True)
-    total_data = models.JSONField(blank=True, help_text = "Data format: {'tax_type':{'tax_percentage':'tax_amount'}}",null=True)
+    tax_data = models.JSONField(blank=True, help_text = "Data format: {'tax_type':{'tax_percentage':'tax_amount'}}",null=True) #type:ignore
+    total_data = models.JSONField(blank=True, help_text = "Data format:{vendor1: {'tax_type':{'tax_percentage':'tax_amount'}}}",null=True)
     total_tax = models.FloatField()
     
     payment_method = models.CharField(max_length=25)
@@ -62,7 +62,7 @@ class Order(models.Model):
 
     def __str__(self):
         return self.order_number
-    
+   
 
     def order_placed_to(self):
         return ", ".join(str(i) for i in self.vendors.all())

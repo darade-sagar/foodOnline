@@ -8,6 +8,8 @@ from .utils import generate_order_number
 from accounts.utils import send_notification
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from menu.models import FoodItem
+from marketplace.models import Tax
 
 # Create your views here.
 @login_required(login_url='login')
@@ -21,8 +23,53 @@ def place_order(request):
     for i in cart_items:
         if i.fooditem.vendor.id not in vendors_id: #type:ignore
             vendors_id.append(i.fooditem.vendor.id) #type:ignore
-    
 
+    # ? THIS CODE IS USED TO STORE TOTAL DATA ATTRIBUTE OF ORDER  <!--START-->
+    '''
+    total_data = {
+        vendor_1:{
+            subtotal:{
+                GST:{
+                    tax_percentage:{
+                        tax_amount
+                    }
+                }
+            }
+        }
+        vendor_2:{
+            subtotal:{
+                GST:{
+                    tax_percentage:{
+                        tax_amount
+                    }
+                }
+            }
+        }
+    }
+    '''
+    subtotal=0
+    subtotal_by_vendor = {}
+    get_tax = Tax.objects.filter(is_active=True)
+    for i in cart_items:
+        fooditem = FoodItem.objects.get(pk=i.fooditem.id,vendor_id__in=vendors_id) #type:ignore
+        vendor_id = fooditem.vendor.id #type:ignore
+        # subtotal for each vendor
+        subtotal_by_vendor[vendor_id] = subtotal_by_vendor.get(vendor_id,0)+round(fooditem.price*i.quantity,2)
+
+    total_data = {}
+    # calculate tax for each subtotal
+    for vendor,subtotal in subtotal_by_vendor.items():
+        # tax_dict for each vendor
+        tax_dict = {}  # { GST:{tax % : tax_amount} }
+        for tax in get_tax:
+            tax_type = tax.tax_type
+            tax_percentage = tax.tax_percentage
+            tax_amount = float(tax_percentage*subtotal)
+            tax_dict[tax_type] = {float(tax_percentage):tax_amount}
+        total_data[vendor] = {float(subtotal):tax_dict}
+
+    # ? THIS CODE IS USED TO STORE TOTAL DATA ATTRIBUTE OF ORDER  <!--END-->
+    
     subtotal = get_cart_amounts(request)['subtotal']
     total_tax = get_cart_amounts(request)['total_tax']
     grand_total = get_cart_amounts(request)['grand_total']
@@ -46,6 +93,7 @@ def place_order(request):
             order.user = request.user
             order.total = grand_total #type:ignore
             order.tax_data = tax_data #type:ignore
+            order.total_data = total_data #type:ignore
             order.total_tax = total_tax #type:ignore
             order.payment_method = request.POST['payment_method']
             order.save() #It will generate id

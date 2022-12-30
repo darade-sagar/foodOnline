@@ -293,22 +293,14 @@ def remove_opening_hours(request,pk):
 
     return HttpResponse() #Ignore
 
+@login_required(login_url='login')
 def order_detail(request,order_number):
     try:
         order = Order.objects.get(order_number=order_number,is_ordered=True)
         ordered_food = OrderedFood.objects.filter(order=order,fooditem__vendor=get_vendor(request))
 
-        grand_total,subtotal = 0,0
-        taxes = Tax.objects.filter(is_active=True)
-        for fooditem in ordered_food:
-            subtotal += (fooditem.price*fooditem.quantity)
-
-        grand_total += subtotal
-        tax_dict = {}
-        for tax in taxes:
-            amount = (subtotal*float(tax.tax_percentage))/100 
-            tax_dict[tax.tax_type]= {tax.tax_percentage:amount}
-            grand_total += amount
+        total_data = order.total_data[get_vendor(request)] #type:ignore
+        print(total_data)
 
         context = {
             'order':order,
