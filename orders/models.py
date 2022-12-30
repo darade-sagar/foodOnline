@@ -66,9 +66,34 @@ class Order(models.Model):
 
     def get_total_by_vendor(self):
         vendor = Vendor.objects.get(user=request_object.user) #type:ignore
-        total_data = self.total_data
-        print(total_data)
-        return vendor
+        subtotal,total_tax=0,0
+        tax_dict = {}
+
+        if self.total_data:
+            vendor_data = self.total_data.get(str(vendor.id))  #type:ignore
+
+            # calculate tax_dict and subtotal
+            subtotal = 0
+            tax_dict = {}
+            for sub_total,tax in vendor_data.items():
+                subtotal += float(sub_total)
+                tax_dict.update(tax)
+
+            # calculate total tax
+            total_tax = 0
+            for tax in tax_dict:
+                for value in tax_dict[tax]:
+                    total_tax += tax_dict[tax][value]
+
+            
+        context = {
+            'grand_total':round(subtotal+total_tax,2),
+            'subtotal':round(subtotal,2),
+            'total_tax':round(total_tax,2),
+            'tax_dict':tax_dict,
+        }
+
+        return context
    
 
     def order_placed_to(self):

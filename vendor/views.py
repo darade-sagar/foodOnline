@@ -299,15 +299,14 @@ def order_detail(request,order_number):
         order = Order.objects.get(order_number=order_number,is_ordered=True)
         ordered_food = OrderedFood.objects.filter(order=order,fooditem__vendor=get_vendor(request))
 
-        total_data = order.total_data[get_vendor(request)] #type:ignore
-        print(total_data)
+        data = order.get_total_by_vendor()
 
         context = {
             'order':order,
             'ordered_food':ordered_food,
-            'subtotal':subtotal,
-            'tax_dict':tax_dict,
-            'grand_total':grand_total,
+            'subtotal':data['subtotal'],
+            'tax_dict':data['tax_dict'],
+            'grand_total':data['grand_total'],
         }
         
     except:

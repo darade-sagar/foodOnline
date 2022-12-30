@@ -18,6 +18,7 @@ from django.contrib.auth.tokens import default_token_generator
 
 from vendor.models import Vendor
 from orders.models import Order
+import datetime 
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -142,11 +143,29 @@ def vendorDashboard(request):
     vendor = Vendor.objects.get(user=request.user)
     orders = Order.objects.filter(vendors__in=[vendor.id],is_ordered=True).order_by("-created_at") #type:ignore
     recent_orders = orders[:5]
+
+    # calculate all month revenue
+    revenue = 0
+    for order in orders:
+        data = order.get_total_by_vendor()
+        revenue += data['grand_total']
+    
+    # calculate last month revenue 
+    month_revenue = 0
+    today = datetime.date.today()
+    first = today.replace(day=1)
+    last_month = first - datetime.timedelta(days=1) 
+    last_month_orders = Order.objects.filter(vendors__in=[vendor.id],is_ordered=True,created_at__gt=last_month) #type:ignore
+    for order in last_month_orders:
+        month_revenue += order.get_total_by_vendor()['grand_total']
+
     context ={
         'vendor' : vendor,
         'orders':orders,
         'orders_count':orders.count(),
         'recent_orders':recent_orders,
+        'revenue':revenue,
+        'month_revenue':month_revenue,
     }
     return render(request,'accounts/vendorDashboard.html', context)
 

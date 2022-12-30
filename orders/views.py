@@ -64,7 +64,7 @@ def place_order(request):
         for tax in get_tax:
             tax_type = tax.tax_type
             tax_percentage = tax.tax_percentage
-            tax_amount = float(tax_percentage*subtotal)
+            tax_amount = float(tax_percentage*subtotal/100)
             tax_dict[tax_type] = {float(tax_percentage):tax_amount}
         total_data[vendor] = {float(subtotal):tax_dict}
 
