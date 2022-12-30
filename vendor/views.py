@@ -312,3 +312,19 @@ def order_detail(request,order_number):
     except:
         return HttpResponse("Error")
     return render(request,'vendor/order_detail.html',context)
+
+
+def my_orders(request):
+    vendor = Vendor.objects.get(user=request.user)
+    if request.GET.get('q') and request.GET.get('q') != 'All':
+        orders = Order.objects.filter(vendors__in=[vendor.id],is_ordered=True,status=request.GET.get('q')).order_by("-created_at") #type:ignore
+        q = request.GET.get('q')
+    else:
+        orders = Order.objects.filter(vendors__in=[vendor.id],is_ordered=True).order_by("-created_at") #type:ignore
+        q = 'All'
+    
+    context = {
+        'orders':orders,
+        'q':q,
+    }
+    return render(request,'vendor/my_orders.html',context)

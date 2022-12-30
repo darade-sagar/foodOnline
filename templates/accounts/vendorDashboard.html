@@ -18,7 +18,14 @@
                 <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                     <div class="user-dashboard loader-holder">
                         <div class="user-holder">
-                            <h5 class="text-uppercase">Overview</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="text-uppercase">Overview</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="text-right"><b>{{request.user.email}}</b></p>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                     <div class="card">
@@ -83,7 +90,7 @@
                                                     {% endfor %}
                                                 </tbody>
                                               </table>
-                                              <a href="{% url 'customer_my_orders' %}" class="btn btn-danger mt-3" >All Orders</a>
+                                              <a href="{% url 'vendor_my_orders' %}" class="btn btn-danger mt-3" >All Orders</a>
 
                                         </div>												
                                     </div>
