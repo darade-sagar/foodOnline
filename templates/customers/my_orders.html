@@ -23,22 +23,24 @@
                                     <h5 class="text-uppercase mb-3">My Orders</h5>
                                 </div>
                                 <div class="col-6">
-                                    <div class="dropdown text-right mb-3">
-                                        <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                          Sort by Status
-                                        </a>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                          <li><a class="dropdown-item" href="#">Action</a></li>
-                                          <li><a class="dropdown-item" href="#">Another action</a></li>
-                                          <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
-                                    </div>
+                                  <form class='mb-3 text-right' >
+                                    <select name="q" onchange="this.form.submit()" style="width:200px;"> 
+                                      <option value="All" {% if q == "All" %}selected{% endif %} >All</option>
+                                      <option value="New" {% if q == "New" %}selected{% endif %} >New</option>
+                                      <option value="Accepted" {% if q == "Accepted" %}selected{% endif %} >Accepted</option>
+                                      <option value="Completed" {% if q == "Completed" %}selected{% endif %} >Completed</option>
+                                      <option value="Cancelled" {% if q == "Cancelled" %}selected{% endif %} >Cancelled</option>
+                                    </select>
+                                  </form>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="user-orders-list">
                                         <div class="responsive-table">
+                                          {% if orders.count == 0 %}
+                                          <h5 class='text-center mt-5'>No orders with status "{{q}}"</h5>
+                                          {% else %}
                                             <table class="table table-hover">
                                                 <thead>
                                                   <tr>
@@ -62,8 +64,9 @@
                                                     </tr>
                                                     {% endfor %}
                                                 </tbody>
-                                              </table>
-                                              <!--Need Pagination-->
+                                            </table>
+                                              
+                                            <!--Need Pagination-->
                                               <nav aria-label="Page navigation">
                                                 <ul class="pagination justify-content-center">
                                                   <li class="page-item disabled">
@@ -82,6 +85,7 @@
                                                   </li>
                                                 </ul>
                                               </nav>
+                                          {% endif %}
                                         </div>												
                                     </div>
                                 </div>

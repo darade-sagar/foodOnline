@@ -7,13 +7,21 @@ from django.contrib import messages
 from .utils import generate_order_number
 from accounts.utils import send_notification
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required(login_url='login')
 def place_order(request):
     cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
     cart_count = cart_items.count()
     if cart_count <= 0:
         return redirect('marketplace')
+
+    vendors_id = []
+    for i in cart_items:
+        if i.fooditem.vendor.id not in vendors_id: #type:ignore
+            vendors_id.append(i.fooditem.vendor.id) #type:ignore
+    
 
     subtotal = get_cart_amounts(request)['subtotal']
     total_tax = get_cart_amounts(request)['total_tax']
@@ -42,6 +50,7 @@ def place_order(request):
             order.payment_method = request.POST['payment_method']
             order.save() #It will generate id
             order.order_number = generate_order_number(order.id) #type:ignore
+            order.vendors.add(*vendors_id)
             order.save()
             context ={
                 'order':order,

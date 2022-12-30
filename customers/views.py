@@ -35,13 +35,15 @@ def cprofile(request):
     return render(request,'customers/cprofile.html',context)
 
 def my_orders(request):
-    # if request.GET.get('q'):
-    #     order = Order.objects.filter(user=request.user,is_ordered=True,status=request.GET.get('q')).order_by('-created_at')
-    # else:
-    #     order = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
-    order = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
+    if request.GET.get('q') and request.GET.get('q') != 'All':
+        order = Order.objects.filter(user=request.user,is_ordered=True,status=request.GET.get('q')).order_by('-created_at')
+        q = request.GET.get('q')
+    else:
+        order = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
+        q="All"
     context ={
         'orders':order,
+        'q':q,
     }
     return render(request,'customers/my_orders.html',context)
 
