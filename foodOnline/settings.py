@@ -169,3 +169,6 @@ DEFAULT_FROM_EMAIL = 'foodOnline Marketplace <daradesagar.django@gmail.com>'
 # Paypal Configurations
 PAYPAL_CLIENT_ID = config('PAYPAL_CLIENT_ID')
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
+
+# site url
+SITE_URL = config('SITE_URL')
