@@ -61,6 +61,7 @@
         }
       }).render('#paypal-button-container');
     }
+    
     /*Send Ajax Request to store in DB*/
     function sendTransaction(transactionId,payment_method,status){
         $.ajax({
@@ -74,10 +75,15 @@
                 'csrfmiddlewaretoken':csrftoken,
             },
             success: function(response){
-                console.log('response===>',response)
-                window.location.href = order_complete+'?order_no='+response.order_number+'&trans_id='+response.transaction_id
-                
-            }
+                if(response.status == 'success'){
+                  window.location.href = order_complete+'?order_no='+response.order_number+'&trans_id='+response.transaction_id
+                }else{
+                  swal('Order Failed','We are sorry for inconvenience. Please reach out to daradesagar.django@gmail.com','error')
+                  const element = document.getElementById('paypal-button-container');
+                  element.innerHTML = '';
+                  element.innerHTML = '<p class="text-center"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> We are sorry for inconvenience. Please reach out to daradesagar.django@gmail.com</p>';    
+                }
+            },           
         })
     }
     
