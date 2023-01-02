@@ -32,7 +32,7 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
-    vendors = models.ManyToManyField(Vendor,blank=True)
+    vendors = models.ManyToManyField(Vendor,blank=True) #type:ignore
     order_number = models.CharField(max_length=20)
     # billing address
     first_name = models.CharField(max_length=50)

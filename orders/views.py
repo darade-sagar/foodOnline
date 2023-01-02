@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from menu.models import FoodItem
 from marketplace.models import Tax
+from .utils import order_total_by_vendor
 
 # Create your views here.
 @login_required(login_url='login')
@@ -153,27 +154,47 @@ def payments(request):
         # Send Notifications to each vendor
         mail_subject='You have received new Order | foodOnline'
         template='orders/new_order_received.html'
-        to_mails = list(set([i.fooditem.vendor.user.email for i in cart_items ]))
-        print(to_mails)
-        context={
-            'order':order,
-            'to_email':to_mails,
-        }
-        send_notification(mail_subject,template,context)
+        to_mails = []
+        for i in cart_items:
+            if i.fooditem.vendor.user.email not in to_mails:
+                to_mails.append(i.fooditem.vendor.user.email)
+
+                ordered_food_to_vendor = OrderedFood.objects.filter(order=order,fooditem__vendor = i.fooditem.vendor)
+                
+                        
+                context={
+                    'order':order,
+                    'to_email':[i.fooditem.vendor.user.email],
+                    'ordered_food_to_vendor':ordered_food_to_vendor,
+                    'vendor':i.fooditem.vendor,
+                    'vendor_subtotal':order_total_by_vendor(order=order,vendor=i.fooditem.vendor)['subtotal'],
+                    'tax_data':order_total_by_vendor(order=order,vendor=i.fooditem.vendor)['tax_dict'],
+                    'vendor_grand_total':order_total_by_vendor(order=order,vendor=i.fooditem.vendor)['grand_total'],
+                }
+                send_notification(mail_subject,template,context)
 
         # Send Notifications to customer
-        mail_subject='Order Confirmation | foodOnline'
+        mail_subject='Thank you for Ordering with us | foodOnline'
         template='orders/order_confirmation.html'
-        to_mails = [request.user.email]
+        to_mails = [order.email]
+        ordered_food = OrderedFood.objects.filter(order=order)
+        customer_subtotal = 0
+        for item in ordered_food:
+            customer_subtotal += (item.price*item.quantity)
+        tax_data = order.tax_data
+        print(tax_data)
         context={
             'order':order,
             'to_email':to_mails,
             'user':request.user,
+            'ordered_food':ordered_food,
+            'customer_subtotal':customer_subtotal,
+            'tax_data':tax_data,
         }
         send_notification(mail_subject,template,context)
 
         # Clear the cart
-        cart_items.delete()
+        # cart_items.delete()
 
         # Clear orders which dont have any payment
         orders_without_payment = Order.objects.filter(user=request.user,is_ordered=False)
