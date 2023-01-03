@@ -11,23 +11,16 @@
                 <h5>Subscribe to our Newsletter</h5>
               </div>
               <div class="fieldset">
-                <form action="#">
+                <form action="{% url 'NewsletterEmailRegister' %}" method="POST">
+                  {% csrf_token %}
                   <div class="field-holder">
                     <label>
                       <i class="icon-envelope3"></i>
-                      <input
-                        type="text"
-                        class="field-input"
-                        placeholder=" Enter Your Email Address..."
-                      />
+                      <input type="text" name="email" class="field-input" placeholder=" Enter Your Email Address..." required/>
                     </label>
                   </div>
                   <div class="field-holder btn-holder">
-                    <input
-                      class="subscribe-btn bgcolor"
-                      type="submit"
-                      value="Sign Up"
-                    />
+                    <input class="subscribe-btn bgcolor" type="submit" value="Subscribe"/>
                   </div>
                 </form>
               </div>
@@ -43,8 +36,7 @@
             <div class="copyright-inner">
               <div class="copy-right">
                 <p>
-                  © 2020 Foodbakery. All Rights Reserved. Developed By
-                  <a href="#">Rathan Kumar</a>
+                  © {% now "Y" %} Foodbakery. All Rights Reserved.
                 </p>
               </div>
             </div>

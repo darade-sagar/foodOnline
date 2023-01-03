@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'marketplace',
     'customers',
     'orders',
+    'newsletter',
 ]
 
 MIDDLEWARE = [

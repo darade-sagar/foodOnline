@@ -19,6 +19,7 @@ from django.contrib.auth.tokens import default_token_generator
 from vendor.models import Vendor
 from orders.models import Order
 import datetime 
+from newsletter.models import SubscribedMails
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -253,3 +254,15 @@ def reset_password(request):
             messages.error(request, 'Password not matched')
             return redirect(reset_password)
     return render(request,'accounts/reset_password.html')
+
+def NewsletterEmailRegister(request):
+    if request.POST:
+        email = request.POST.get('email')
+        obj = SubscribedMails()
+        obj.email = email
+        obj.is_active=True
+        obj.save()
+        messages.success(request,'Thank you for subscribing to foodOnline Newsletter')
+        return redirect('home')
+    return redirect('home')
+    
