@@ -227,6 +227,13 @@ $(document).ready(function(){
         })
 
     })
+
+    $('textarea').keyup(function(){
+        if(this.value.length > 1000){
+            return false;
+        }
+        $("#short_desc").html("<span class='float-right' style='color:red; text-size:8px'>Character Limit : " + (1000 - this.value.length)+"</span>");
+    })
 })
 
 
