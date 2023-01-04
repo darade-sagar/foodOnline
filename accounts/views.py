@@ -258,11 +258,16 @@ def reset_password(request):
 def NewsletterEmailRegister(request):
     if request.POST:
         email = request.POST.get('email')
-        obj = SubscribedMails()
-        obj.email = email
-        obj.is_active=True
-        obj.save()
-        messages.success(request,'Thank you for subscribing to foodOnline Newsletter')
-        return redirect('home')
+        if SubscribedMails.objects.filter(email=email).count() == 1:
+            user = SubscribedMails.objects.get(email=email)
+            user.is_active=True
+            user.save()
+            messages.success(request,'You have unsubscribed to foodOnline Newsletter')
+        else:
+            obj = SubscribedMails()
+            obj.email = email
+            obj.is_active=True
+            obj.save()
+            messages.success(request,'Thank you for subscribing to foodOnline Newsletter')
     return redirect('home')
     

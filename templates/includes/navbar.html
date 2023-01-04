@@ -43,6 +43,9 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
               <div class="login-option">
+                  <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'newsFeed' %}">
+                    <i class="fa fa-newspaper-o text-danger" style="font-size:20px;" aria-hidden="true"></i>
+                  </a>
                 {% if user.is_authenticated %}
                 <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'cart' %}">
                   <i class="fa fa-shopping-cart text-danger" style="font-size:20px;"></i>

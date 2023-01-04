@@ -22,8 +22,9 @@ urlpatterns = [
     path('vendor/', include('vendor.urls')),
     path('customer/', include('customers.urls')),
 
+    # newsletter
     path('newsletterEmailRegister/', views.NewsletterEmailRegister, name='NewsletterEmailRegister'),
-
+    path('news/',include('newsletter.urls')),
 
 
 ]

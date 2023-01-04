@@ -47,3 +47,4 @@ def send_notification(mail_subject,template,context):
         mail = EmailMessage(mail_subject, message, from_email=from_email,to=[id])
         mail.content_subtype = 'html'
         mail.send()
+

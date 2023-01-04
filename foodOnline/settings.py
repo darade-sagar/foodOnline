@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'customers',
     'orders',
     'newsletter',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -173,3 +174,11 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 # site url
 SITE_URL = config('SITE_URL')
+
+# CKeditor Config
+CKEDITOR_CONFIGS = {
+    'default': {
+        'height': 'full', 
+        'width': 'full', 
+    },
+}
