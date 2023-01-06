@@ -7,22 +7,18 @@
 <div class="main-section">
   <!-- Home Pages Elements Strat -->
   <!-- Main Search Start -->
-  <div
-    class="page-section nopadding cs-nomargin"
-    style="
+  <div class="page-section nopadding cs-nomargin" style="
       padding-top: 200px;
       padding-bottom: 150px;
       margin-bottom: 0px;
       background: url({% static 'extra-images/bg-image1.jpg' %}) no-repeat center /
         cover;
-    "
-  >
+    ">
     <div class="container">
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="element-title">
-            <h1
-              style="
+            <h1 style="
                 font-size: 40px;
                 color: #505050;
                 text-transform: uppercase;
@@ -32,14 +28,12 @@
               ">
               We are in the business of food<br />our restaurants do
             </h1>
-            <p
-              style="
+            <p style="
                 font-size: 18px;
                 letter-spacing: 1px;
                 color: #505050;
                 text-align: center;
-              "
-              > 
+              ">
               Ridiculus sociosqu cursus neque cursus curae ante
               scelerisque vehicula.
             </p>
@@ -76,53 +70,49 @@
   <!-- Main Search End -->
 
   <!-- Top Restarurants Section Start -->
-  <div
-    class="page-section nopadding cs-nomargin"
-    style="
+  <div class="page-section nopadding cs-nomargin" style="
       margin-top: 0px;
       padding-top: 60px;
       padding-bottom: 0px;
       margin-bottom: 0px;
       background: #ffffff;
-    "
-  >
-    <div class="container mx-auto">       
-        <div class="element-title">
-          <h2>Top Restaurants</h2>
-          <p>Explore restaurants, bars, and cafés by locality</p>
-        </div>
+    ">
+    <div class="container mx-auto">
+      <div class="element-title">
+        <h2>Top Restaurants</h2>
+        <p>Explore restaurants, bars, and cafés by locality</p>
+      </div>
 
-        <div class="company-logo">
-          <ul >
-            {% for vendor in vendors %}
-            <li class="has-border" >
-              <figure>
-                  {% if vendor.user_profile.profile_picture %}
-                    <a href="#"><img src="{{vendor.user_profile.profile_picture.url}}" class="attachment-full size-full wp-post-image" alt=""/></a>
-                  {% else %}
-                    <a href="#"><img src="{% static 'images/default-profile.png' %}" class="attachment-full size-full wp-post-image" alt=""/></a>
-                  {% endif %}
-                </figure>
-              </li>
-              {% endfor %}
-          </ul>
-        </div>
+      <div class="company-logo">
+        <ul>
+          {% for vendor in vendors %}
+          <li class="has-border">
+            <figure>
+              {% if vendor.user_profile.profile_picture %}
+              <a href="#"><img src="{{vendor.user_profile.profile_picture.url}}"
+                  class="attachment-full size-full wp-post-image" alt="" /></a>
+              {% else %}
+              <a href="#"><img src="{% static 'images/default-profile.png' %}"
+                  class="attachment-full size-full wp-post-image" alt="" /></a>
+              {% endif %}
+            </figure>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
   </div>
   <!-- Top Restarurants Section End -->
 
 
   <!-- Choose From Most Popular Listin Start -->
-  <div
-    class="page-section nopadding cs-nomargin"
-    style="
+  <div class="page-section nopadding cs-nomargin" style="
       margin-top: 0px;
       padding-top: 60px;
       padding-bottom: 50px;
       margin-bottom: 0px;
       background: #ffffff;
-    "
-  >
+    ">
     <div class="container">
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -142,27 +132,30 @@
                 <div class="list-post featured">
                   <div class="img-holder">
                     <figure>
-                      <a href="#" >
+                      <a href="#">
                         {% if vendor.user_profile.profile_picture %}
-                          <img src="{{vendor.user_profile.profile_picture.url}}" class="img-thumb wp-post-image" alt=""/>
+                        <img src="{{vendor.user_profile.profile_picture.url}}" class="img-thumb wp-post-image" alt="" />
                         {% else %}
-                          <img src="{% static 'images/default-profile.png' %}" class="img-thumb wp-post-image" alt=""/>
+                        <img src="{% static 'images/default-profile.png' %}" class="img-thumb wp-post-image" alt="" />
                         {% endif %}
                       </a>
                     </figure>
-                    {% if vendor.is_open %}<span class="restaurant-status open"><em class="bookmarkRibbon"></em>Open</span>{% endif %}
-                    {% if not vendor.is_open %}<span class="restaurant-status close"><em class="bookmarkRibbon"></em>Closed</span>{% endif %}
+                    {% if vendor.is_open %}<span class="restaurant-status open"><em
+                        class="bookmarkRibbon"></em>Open</span>{% endif %}
+                    {% if not vendor.is_open %}<span class="restaurant-status close"><em
+                        class="bookmarkRibbon"></em>Closed</span>{% endif %}
 
                   </div>
                   <div class="text-holder">
-                    
+
                     <div class="post-title">
                       <h5>
                         <a href="{% url 'vendor_detail' vendor.vendor_slug %}">{{vendor}}</a>
                       </h5>
                     </div>
                     {% if vendor.user_profile.city and vendor.user_profile.state and vendor.user_profile.pincode %}
-                    <span>{{vendor.user_profile.city}}, {{vendor.user_profile.state}}, {{vendor.user_profile.pincode}}</span>
+                    <span>{{vendor.user_profile.city}}, {{vendor.user_profile.state}},
+                      {{vendor.user_profile.pincode}}</span>
                     {% endif %}
                   </div>
                 </div>
