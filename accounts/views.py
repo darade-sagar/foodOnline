@@ -165,8 +165,8 @@ def vendorDashboard(request):
         'orders':orders,
         'orders_count':orders.count(),
         'recent_orders':recent_orders,
-        'revenue':revenue,
-        'month_revenue':month_revenue,
+        'revenue':round(revenue,2),
+        'month_revenue':round(month_revenue,2),
     }
     return render(request,'accounts/vendorDashboard.html', context)
 

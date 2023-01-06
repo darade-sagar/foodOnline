@@ -24,14 +24,16 @@
                                             <div class="col-5 p-0">
                                                 <h2><a href="{% url 'product_info' product.id %}" >{{product}}</a></h2> 
                                                 <span class="badge badge-success" style="font-size:12px">{{product.vendor}}</span>
-                                                
-                                                <div class="rating top-left" style="">
-                                                    <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
-                                                    <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
-                                                    <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
-                                                    <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
-                                                    <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+
+                                                <div class="pt-3 pb-3" >
+                                                    <i class="fa fa-star " style='font-size:20px; {% if product_rating >= 1 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                                    <i class="fa fa-star " style='font-size:20px; {% if product_rating >= 2 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                                    <i class="fa fa-star " style='font-size:20px; {% if product_rating >= 3 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                                    <i class="fa fa-star " style='font-size:20px; {% if product_rating >= 4 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                                    <i class="fa fa-star " style='font-size:20px; {% if product_rating >= 5 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                                    <span class='ml-1' style='font-size:20px;'>({{total_ratings}})</span>
                                                 </div>
+                                                
                                                 <h6 class="">Description:</h6>
                                                 <div style="font-size:12px">{{product.description}}</div><br>  
                                                 <div style="font-size:16px"><b>Price: </b><small>{{product.price}}</small> /-</div><br>
@@ -57,19 +59,24 @@
                                     <div id="menu-item-list-6272" class="menu-itam-list">
                                         <div class="row  p-3 pb-0">
                                             <div class="col-5 p-0">
-                                                <img src="{{vendor.user_profile.profile_picture.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;" width="100px">
+                                                {% if product.vendor.user_profile.profile_picture %}
+                                                <img src="{{product.vendor.user_profile.profile_picture.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;" width="100px">
+                                                {% else %}
+                                                <img src="{% static 'images/default-profile.png' %}" alt="" style="border-radius: 5px; border: 1px solid #000000;" width="100px">
+                                                {% endif %}
                                             </div>
                                             <div class="col-7 pl-2">
-                                                <h3><a href="{% url 'vendor_detail' vendor.vendor_slug %}" >{{vendor.vendor_name}}</a></h3> 
-                                                <i class="fa fa-map-marker  pr-2" style="font-size:18px" aria-hidden="true"> </i><span class="badge badge-warning" style="font-size:12px">{{vendor.user_profile.address}}</span><br>
-                                                <i class="fa fa-phone" aria-hidden="true"></i><span style="font-size:12px">{{vendor.user.phone_number}}</span>
+                                                <h3><a href="{% url 'vendor_detail' product.vendor.vendor_slug %}" >{{product.vendor.vendor_name}}</a></h3> 
+                                                <i class="fa fa-map-marker  pr-2" style="font-size:18px" aria-hidden="true"> </i><span class="badge badge-warning" style="font-size:12px">{{product.vendor.user_profile.address}}</span><br>
+                                                <i class="fa fa-phone" aria-hidden="true"></i><span style="font-size:12px">{{product.vendor.user.phone_number}}</span>
                                             </div>
                                         </div>
                                         <div class="pb-3">
                                             <h6 class='text-danger'>Other Categories:</h6>
                                             {% for category in categories %}
-                                                <ul class="{% if searched_category == category.category_name %}active{% endif %}" ><a href="{% url 'vendor_detail' vendor.vendor_slug %}?category={{category}}" class="menu-category-link" style="color:black;"> {{category}} </a></ul>
+                                                <ul class="{% if searched_category == category.category_name %}active{% endif %}" ><a href="{% url 'vendor_detail' product.vendor.vendor_slug %}?category={{category}}" class="menu-category-link" style="color:black;"> {{category}} </a></ul>
                                             {% endfor %}
+                                            
                                         </div>
                                     </div>
 
@@ -87,9 +94,41 @@
                 <div class="tab-content">
                     <div id="home" class="tab-pane in active">
                         <div class="menu-itam-holder">
-                            <div id="menu-item-list-6272" class="menu-itam-list">
-                                
-                            </div>
+                            <form action="" method='POST' >
+                                {% csrf_token %}
+                                <div id="menu-item-list-6272" class="menu-itam-list p-4">
+                                    <h3>Leave a Review </h3><hr>
+                                    <div>
+                                        {% for rating in rating_obj %}
+                                        <div class="jumbotron mt-4 mb-4 p-4 row">
+                                            <div class="col-1.5 mb-3" >
+                                                <i class="fa fa-star " style='font-size:20px; {% if rating.rate_value >= 1 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                                <i class="fa fa-star " style='font-size:20px; {% if rating.rate_value >= 2 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                                <i class="fa fa-star " style='font-size:20px; {% if rating.rate_value >= 3 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                                <i class="fa fa-star " style='font-size:20px; {% if rating.rate_value >= 4 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                                <i class="fa fa-star " style='font-size:20px; {% if rating.rate_value >= 5 %} color:#FF9529 {% endif %} ' aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <small class="p-1 mb-3" style="font-size:14px"><i><b>{{rating.user.username}}, {{rating.created_at}} </b></i></small>
+                                            </div>
+                                            <p class="lead" style="font-size:18px;"><b>{{rating.comment}}</b></p>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <br><hr>
+                                    <h6 class="mt-4">How would you rate this product? <span style="color:red">*</span> </h6>
+                                        <div class="rating top-left" style="">
+                                            <input type="radio" name="rate_value" {% if user_rating.rate_value == 5 %} checked {% endif %} value="5" id="5" "><label for="5">☆</label>
+                                            <input type="radio" name="rate_value" {% if user_rating.rate_value == 4 %} checked {% endif %} value="4" id="4" "><label for="4">☆</label>
+                                            <input type="radio" name="rate_value" {% if user_rating.rate_value == 3 %} checked {% endif %} value="3" id="3" "><label for="3">☆</label>
+                                            <input type="radio" name="rate_value" {% if user_rating.rate_value == 2 %} checked {% endif %} value="2" id="2" "><label for="2">☆</label>
+                                            <input type="radio" name="rate_value" {% if user_rating.rate_value == 1 %} checked {% endif %} value="1" id="1" "><label for="1">☆</label>
+                                        </div>
+                                        <textarea class="form-control mt-4 mb-3" name='comment'></textarea>
+                                    {% if user_rating != 'None'  %}<h6 class="text-danger font-weight-bold">You have already given a Review</h6>{% endif %} <br>
+                                    <button type='submit' class="btn btn-danger">Post</button>
+                                </div>
+                            </form>
                         </div>
                     </div>               
                 </div>

@@ -6,11 +6,13 @@ from orders.forms import OrderForm
 from django.http import JsonResponse
 from .context_processors import get_cart_counter, get_cart_amounts
 from accounts.models import UserProfile
-
+from django.db.models import Sum
 from django.db.models import Prefetch, Q
 from django.contrib.auth.decorators import login_required
-
-from datetime import date, datetime
+from rating.models import Rating
+from django.urls import reverse
+import math
+from datetime import date
 
 # Create your views here.
 def marketplace(request):
@@ -212,6 +214,7 @@ def checkout(request):
 
 
 def product_info(request,id):
+    #vendor other categories
     product = FoodItem.objects.get(id=id)
     vendor = product.vendor
     categories = Category.objects.filter(vendor=vendor).prefetch_related(
@@ -220,9 +223,45 @@ def product_info(request,id):
             queryset= FoodItem.objects.filter(is_available=True)
         )
     )[:3]
+
+
+    # If anyone submit rating, then save it
+    if request.POST:
+        rate_value = request.POST.get('rate_value')
+        comment = request.POST.get('comment')
+        fooditem = FoodItem.objects.get(id=id)
+        rating, created = Rating.objects.update_or_create(
+            food_item=fooditem, user=request.user,
+            defaults={'rate_value': rate_value, 'comment': comment}
+        )
+        return redirect(reverse('product_info', args=[id]))
+    
+    # get user_rating for current Project
+    try:
+        user_rating = Rating.objects.get(food_item__id = id, user=request.user)
+    except:
+        user_rating = None
+
+        
+    # Overall Rating
+    rating_obj = Rating.objects.filter(food_item__id=id).order_by('-updated_at')
+    rating_sum = rating_obj.aggregate(Sum('rate_value'))
+    total_ratings = rating_obj.count()
+
+    if total_ratings>0:
+        product_rating = math.ceil(rating_sum.get('rate_value__sum', 0)//total_ratings)
+    else:
+        product_rating = 0
+
+    # all comment/review of product
+    comments = [i.comment for i in rating_obj]
+
     context={
-        'product':product,
-        'vendor':vendor,
-        'categories':categories,
+        'product':product, # Product to be showed
+        'categories':categories, #vendor other categories
+        'user_rating':user_rating, #user rating value
+        'product_rating':product_rating, #product rating values
+        'total_ratings':total_ratings, #product overall rating
+        'rating_obj':rating_obj[:5], # show comment of products
     }
     return render(request,'marketplace/product_info.html',context)

@@ -15,4 +15,4 @@ class Rating(models.Model):
         unique_together = (('food_item', 'user'),)
 
     def __str__(self):
-        return self.food_item.food_title
+        return 'Rating for ' + self.food_item.food_title

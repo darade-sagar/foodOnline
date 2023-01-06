@@ -228,6 +228,7 @@ $(document).ready(function(){
 
     })
 
+    // newsletter short description field counter
     $('textarea').keyup(function(){
         if(this.value.length > 1000){
             return false;

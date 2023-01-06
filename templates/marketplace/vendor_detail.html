@@ -108,7 +108,7 @@
                                                         <div class="image-holder"><a href="{% url 'product_info' food.id %}" ><img src="{{food.image.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;" width="60px"> </a></div>
                                                         <div class="text-holder">
                                                             <h6><a href="{% url 'product_info' food.id %}" >{{food}}</a></h6>
-                                                            <span>{{food.description}}</span>
+                                                            <span style="max-width:400px">{{food.description}}</span>
                                                         </div>
                                                         <div class="price-holder">
                                                             <span class="price">Rs. {{food.price}}/-</span>
