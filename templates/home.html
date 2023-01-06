@@ -86,32 +86,27 @@
       background: #ffffff;
     "
   >
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div class="element-title align-left">
-            <h2>Top Restaurants</h2>
-            <p>Explore restaurants, bars, and cafés by locality</p>
-          </div>
+    <div class="container mx-auto">       
+        <div class="element-title">
+          <h2>Top Restaurants</h2>
+          <p>Explore restaurants, bars, and cafés by locality</p>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-right: 0 !important; padding-left:0 !important">
-          <div class="company-logo">
-            <ul>
-              {% for vendor in vendors %}
-                <li class="has-border">
-                  <figure>
-                    {% if vendor.user_profile.profile_picture %}
-                      <a href="#"><img src="{{vendor.user_profile.profile_picture.url}}" class="attachment-full size-full wp-post-image" alt=""/></a>
-                    {% else %}
-                      <a href="#"><img src="{% static 'images/default-profile.png' %}" class="attachment-full size-full wp-post-image" alt=""/></a>
-                    {% endif %}
-                  </figure>
-                </li>
+
+        <div class="company-logo">
+          <ul >
+            {% for vendor in vendors %}
+            <li class="has-border" >
+              <figure>
+                  {% if vendor.user_profile.profile_picture %}
+                    <a href="#"><img src="{{vendor.user_profile.profile_picture.url}}" class="attachment-full size-full wp-post-image" alt=""/></a>
+                  {% else %}
+                    <a href="#"><img src="{% static 'images/default-profile.png' %}" class="attachment-full size-full wp-post-image" alt=""/></a>
+                  {% endif %}
+                </figure>
+              </li>
               {% endfor %}
-            </ul>
-          </div>
+          </ul>
         </div>
-      </div>
     </div>
   </div>
   <!-- Top Restarurants Section End -->

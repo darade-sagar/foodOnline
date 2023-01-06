@@ -33,7 +33,6 @@
                                         <td class='text-left'>{{forloop.counter}}</td>
                                         <td class='text-left'>
                                             <a href="{% url 'fooditems_by_category' cat.id %}"><p class='mb-0 font-weight-bold'>{{cat.category_name}}</p></a>
-                                            <small class="text-muted">{{cat.description}}</small>
                                         </td>
                                         <td>
                                             {% if cat.fooditems.all|length > 0 %}
