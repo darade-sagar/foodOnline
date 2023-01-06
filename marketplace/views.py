@@ -25,13 +25,28 @@ def marketplace(request):
 
 def vendor_detail(request, vendor_slug):
     vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
-    categories = Category.objects.filter(vendor=vendor).prefetch_related(
-        Prefetch(
-            'fooditems',
-            queryset= FoodItem.objects.filter(is_available=True)
+    context = {}
+    if request.GET.get('category') != None:
+        categories = Category.objects.filter(vendor=vendor,category_name=request.GET.get('category')).prefetch_related(
+            Prefetch(
+                'fooditems',
+                queryset= FoodItem.objects.filter(is_available=True)
+            )
         )
-    )
-
+        context.update({'searched_category':request.GET.get('category')})
+    else:
+        categories = Category.objects.filter(vendor=vendor).prefetch_related(
+            Prefetch(
+                'fooditems',
+                queryset= FoodItem.objects.filter(is_available=True)
+            )
+        )
+    allcategories = Category.objects.filter(vendor=vendor).prefetch_related(
+            Prefetch(
+                'fooditems',
+                queryset= FoodItem.objects.filter(is_available=True)
+            )
+        )
     opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day','-from_hour')
     
     
@@ -48,14 +63,15 @@ def vendor_detail(request, vendor_slug):
     else:
         cart_items = None
 
-    context ={
+    context.update({
         'vendor' : vendor,
         'categories':categories,
         'cart_items':cart_items,
         'opening_hours':opening_hours,
         'current_opening_hours':current_opening_hours,
         'is_open':vendor.is_open,
-    }
+        'allcategories':allcategories,
+    })
     return render(request,'marketplace/vendor_detail.html',context)
 
 # function to check if request is AJAX or not
@@ -193,3 +209,20 @@ def checkout(request):
         'cart_items':cart_items,
     }
     return render(request,'marketplace/checkout.html',context)
+
+
+def product_info(request,id):
+    product = FoodItem.objects.get(id=id)
+    vendor = product.vendor
+    categories = Category.objects.filter(vendor=vendor).prefetch_related(
+        Prefetch(
+            'fooditems',
+            queryset= FoodItem.objects.filter(is_available=True)
+        )
+    )[:3]
+    context={
+        'product':product,
+        'vendor':vendor,
+        'categories':categories,
+    }
+    return render(request,'marketplace/product_info.html',context)

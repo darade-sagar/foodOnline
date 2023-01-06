@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<!-- Main Section Start -->
+<div class="main-section">
+    <div class="page-section pt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-food" style="font-size:18px"></i>Food Details</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="home" class="tab-pane in active">
+                                <div class="menu-itam-holder">
+                                    <div id="menu-item-list-6272" class="menu-itam-list">
+                                        <div class="row  p-4">
+                                            <div class="col-7 p-0">
+                                                <img src="{{product.image.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;" width="350px">
+                                            </div>
+                                            <div class="col-5 p-0">
+                                                <h2><a href="{% url 'product_info' product.id %}" >{{product}}</a></h2> 
+                                                <span class="badge badge-success" style="font-size:12px">{{product.vendor}}</span>
+                                                
+                                                <div class="rating top-left" style="">
+                                                    <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
+                                                    <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
+                                                    <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                                                    <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                                                    <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                                                </div>
+                                                <h6 class="">Description:</h6>
+                                                <div style="font-size:12px">{{product.description}}</div><br>  
+                                                <div style="font-size:16px"><b>Price: </b><small>{{product.price}}</small> /-</div><br>
+                                                <btn href="#" class="add_to_cart btn btn-danger btn-block bottom-fixed" onclick="swal('Added to cart','','success')" data-id="{{product.id}}" data-url="{% url 'add_to_cart' product.id %}" > Add to Cart</i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <!--Your Order Section-->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="tabs-holder horizontal">
+                        <ul class="stickynav-tabs nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#home"><i class="icon- icon-room_service" style="font-size:18px"></i>Vendor Details</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="home" class="tab-pane in active">
+                                <div class="menu-itam-holder">
+                                    <div id="menu-item-list-6272" class="menu-itam-list">
+                                        <div class="row  p-3 pb-0">
+                                            <div class="col-5 p-0">
+                                                <img src="{{vendor.user_profile.profile_picture.url}}" alt="" style="border-radius: 5px; border: 1px solid #000000;" width="100px">
+                                            </div>
+                                            <div class="col-7 pl-2">
+                                                <h3><a href="{% url 'vendor_detail' vendor.vendor_slug %}" >{{vendor.vendor_name}}</a></h3> 
+                                                <i class="fa fa-map-marker  pr-2" style="font-size:18px" aria-hidden="true"> </i><span class="badge badge-warning" style="font-size:12px">{{vendor.user_profile.address}}</span><br>
+                                                <i class="fa fa-phone" aria-hidden="true"></i><span style="font-size:12px">{{vendor.user.phone_number}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="pb-3">
+                                            <h6 class='text-danger'>Other Categories:</h6>
+                                            {% for category in categories %}
+                                                <ul class="{% if searched_category == category.category_name %}active{% endif %}" ><a href="{% url 'vendor_detail' vendor.vendor_slug %}?category={{category}}" class="menu-category-link" style="color:black;"> {{category}} </a></ul>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <!--Your Order Section-->               
+            </div>
+            <div class="tabs-holder horizontal">
+                <div class="tab-content">
+                    <div id="home" class="tab-pane in active">
+                        <div class="menu-itam-holder">
+                            <div id="menu-item-list-6272" class="menu-itam-list">
+                                
+                            </div>
+                        </div>
+                    </div>               
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Section End -->
+<!--Rating style-->
+<style>
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: left;
+      }
+      
+      .rating > input{ display:none;}
+      
+      .rating > label {
+        position: relative;
+          width: 1em;
+          font-size: 35px;
+          color: #FFA600;
+          cursor: pointer;
+
+      }
+      .rating > label::before{ 
+        content: "\2605";
+        position: absolute;
+        opacity: 0;
+      }
+      .rating > label:hover:before,
+      .rating > label:hover ~ label:before {
+        opacity: 1 !important;
+      }
+      
+      .rating > input:checked ~ label:before{
+        opacity:1;
+      }
+      
+      .rating:hover > input:checked ~ label:before{ opacity: 0.4; }
+
+      .top-left {
+        position: relative;
+        margin-top:10px;
+        left: 0;
+        top: 0;
+        align-content:left !important 
+      }
+
+      
+</style>
+{% include 'includes/alerts.html' %}
+{% endblock content %}
