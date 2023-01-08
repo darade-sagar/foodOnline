@@ -1,0 +1,44 @@
+@keyframes show-toast {
+  0% {
+    bottom: 100%;
+  }
+  20% {
+    bottom: 100px;
+  }
+  80% {
+    bottom: 100px;
+  }
+  100% {
+    bottom: -100%;
+  }
+}
+
+.show-notifications {
+  position: fixed;
+  bottom: 100%;
+  right: 20px;
+  animation-name: show-toast;
+  animation-duration: 8s;
+  z-index: 99;
+}
+
+.btn{
+  padding: 2px 1.7Sem;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* .table td, table > tbody > tr > td {
+  border: none; 
+  width: 500px;
+  align-items: left;
+  
+} */
+
+#opening_hours select{
+  padding: 5px 5px !important;
+}
+
+.btn-success.add_hour{
+  padding: 7px 15px 7px 15px;
+}
