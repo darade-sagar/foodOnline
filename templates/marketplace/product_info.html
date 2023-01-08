@@ -125,10 +125,18 @@
                                             <input type="radio" name="rate_value" {% if user_rating.rate_value == 1 %} checked {% endif %} value="1" id="1" "><label for="1">☆</label>
                                         </div>
                                         <textarea class="form-control mt-4 mb-3" name='comment'></textarea>
-                                    {% if user_rating != 'None'  %}<h6 class="text-danger font-weight-bold">You have already given a Review</h6>{% endif %} <br>
+                                    {% if request.user.is_authenticated %}
                                     <button type='submit' class="btn btn-danger">Post</button>
+                                    {% endif %}
                                 </div>
                             </form>
+                            {% if not request.user.is_authenticated %}
+                            <div class="p-4">
+                                <h4 class="">Please login to give review </h4>
+                                <a href="{% url 'login' %}" class="btn btn-danger mt-3">Login</a>
+
+                            </div>
+                            {% endif %}
                         </div>
                     </div>               
                 </div>
