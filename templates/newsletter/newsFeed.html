@@ -17,7 +17,9 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-5 mr-3">
+                                    {% if request.user.is_admin %}
                                     <a href="{% url 'addNews' %}" class="btn btn-success float-right"><i class="fa fa-plus" aria-hidden="true"></i> Add News </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -30,8 +32,8 @@
                                     <small class="badge badge-warning p-1" style="font-size:8px"><b><i>{{item.created_at}}</i>, @{{item.created_by.username}}</b></small>
                                     <small class="">
                                         <a href="{% url 'fullNews' item.slug %}" class="btn btn-danger float-right">Full news</a>
-                                        <a href="{% url 'updateNews' item.slug %}" class="btn btn-outline-dark float-right mr-3"> <i class="fa fa-edit"></i></a>
                                         {% if request.user.is_admin %}
+                                        <a href="{% url 'updateNews' item.slug %}" class="btn btn-outline-dark float-right mr-3"> <i class="fa fa-edit"></i></a>
                                             <a href="{% url 'deleteNews' item.id %}" class="btn btn-outline-dark float-right mr-3"> <i class="fa fa-trash"></i></a>
                                         {% endif %}
                                     </small>
