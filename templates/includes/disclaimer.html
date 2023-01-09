@@ -1,0 +1,17 @@
+<div id="notification" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true"
+    style="position: fixed; bottom: 20px; right: 20px;">
+    <div class="toast-header bg-danger text-white">
+        <strong class="mr-auto">Notification</strong>
+    </div>
+    <div class="toast-body">
+        <b>This site is not responsive. For better experience open it in desktop view at 100% zoom</b> 
+    </div>
+</div>
+
+<script>
+    function showNotification() {
+        var notification = document.getElementById("notification");
+        notification.classList.add("show");
+    }
+    showNotification();
+</script>

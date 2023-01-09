@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+  <title>Cricket Score Application</title>
+</head>
+
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center mb-5">Cricket Score</h1>
+    <div class="row">
+      <div class="col-md-6">
+        <h2 class="text-center mb-3">Team A</h2>
+        <div class="form-group">
+          <label for="team-a-score">Score</label>
+          <input type="number" class="form-control" id="team-a-score" value="0">
+        </div>
+        <div class="form-group">
+          <label for="team-a-wickets">Wickets</label>
+          <input type="number" class="form-control" id="team-a-wickets" value="0">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h2 class="text-center mb-3">Team B</h2>
+        <div class="form-group">
+          <label for="team-b-score">Score</label>
+          <input type="number" class="form-control" id="team-b-score" value="0">
+        </div>
+        <div class="form-group">
+          <label for="team-b-wickets">Wickets</label>
+          <input type="number" class="form-control" id="team-b-wickets" value="0">
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-5">
+      <button class="btn btn-primary" onclick="updateScore()">Update Score</button>
+    </div>
+  </div>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+
