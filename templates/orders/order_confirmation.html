@@ -1,17 +1,23 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" lang="en">
-    <head>
-        <link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Lato|Lato:i,b,bi">
-        <meta property="og:title" content="Email template">  
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-        <style type="text/css">
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:v="urn:schemas-microsoft-com:vml" lang="en">
+
+<head>
+    <link rel="stylesheet" type="text/css" hs-webfonts="true"
+        href="https://fonts.googleapis.com/css?family=Lato|Lato:i,b,bi">
+    <meta property="og:title" content="Email template">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
         #email {
             margin: auto;
             width: 600px;
             background-color: white;
-        }  
-        .activate-btn{
+        }
+
+        .activate-btn {
             font: inherit;
             background-color: #C33332;
             border: none;
@@ -19,91 +25,96 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: 900;
-            border-radius: 5px; 
+            border-radius: 5px;
             text-decoration: none;
-        }      
-        </style>    
-    </head>    
-    <body bgcolor="#F5F8FA" style="width: 100%; margin: auto 0; padding:0; font-family:Lato, sans-serif; font-size:16px; color:#33475B; word-break:break-word">
-        <div id="email">
-            <table role="presentation" width="100%">
-                <tr>
-                <td  align="center" style="color: white;">
-                <img alt="Logo" src="https://rathank.com/foodonline/logo/logo.png" width="400px" align="middle">
+        }
+    </style>
+</head>
+
+<body bgcolor="#F5F8FA"
+    style="width: 100%; margin: auto 0; padding:0; font-family:Lato, sans-serif; font-size:16px; color:#33475B; word-break:break-word">
+    <div id="email">
+        <table role="presentation" width="100%">
+            <tr>
+                <td align="center" style="color: white;">
+                    <img alt="Logo" src="https://rathank.com/foodonline/logo/logo.png" width="400px" align="middle">
                 </td>
-            </table>
+        </table>
 
-            <table bgcolor="#EAF0F6" width="100%" role="presentation" border="0" cellpadding="0" cellspacing="10px" style="padding: 30px 30px 10px 60px;">
+        <table bgcolor="#EAF0F6" width="100%" role="presentation" border="0" cellpadding="0" cellspacing="10px"
+            style="padding: 30px 30px 10px 60px;">
+            <tr>
+                <td>
+                    <h2>Hi {{user.first_name | title}},</h2>
+                    <h3><b>Thank you for your order.</b></h3>
+                    <p>Review your order information below.</p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Order Date:</b> {{order.created_at}}</td>
+            </tr>
+            <tr>
+                <td><b>Order Number:</b> {{order.order_number}}</td>
+            </tr>
+            <tr>
+                <td><b>Payment Method:</b> {{order.payment_method}}</td>
+            </tr>
+            <tr>
+                <td><b>Transaction ID:</b> {{order.payment.transaction_id}}</td>
+            </tr>
+        </table>
+
+        <!--Ordered Food Table-->
+        <table bgcolor="#EAF0F6" width="100%" role="presentation" border="0" cellpadding="0" cellspacing="10px"
+            style="padding: 10px 30px 10px 60px;">
+            <tbody>
                 <tr>
+                    <th>FoodItems</th>
+                    <th>QTY</th>
+                    <th>Price(per item)</th>
+                </tr>
+                {% for food in ordered_food %}
+                <tr style="text-align:center;">
                     <td>
-                        <h2>Hi {{user.first_name | title}},</h2>
-                        <h3><b>Thank you for your order.</b></h3>
-                        <p>Review your order information below.</p>
+                        <p style="margin:0;">{{food.fooditem}}</p>
+                        <small><a href="http://{{domain}}{% url 'vendor_detail' food.fooditem.vendor.vendor_slug %}"
+                                style="color:red;">{{food.fooditem.vendor.vendor_name}}</a></small>
                     </td>
+                    <td>{{food.quantity}}</td>
+                    <td>Rs. {{food.price}}/-</td>
                 </tr>
-                <tr>
-                    <td><b>Order Date:</b> {{order.created_at}}</td>
-                </tr>
-                <tr>
-                    <td><b>Order Number:</b> {{order.order_number}}</td>
-                </tr>
-                <tr>
-                    <td><b>Payment Method:</b> {{order.payment_method}}</td>
-                </tr>
-                <tr>
-                    <td><b>Transaction ID:</b> {{order.payment.transaction_id}}</td>
-                </tr>
-            </table>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!--Ordered Food Table-->
 
-            <!--Ordered Food Table-->
-            <table bgcolor="#EAF0F6" width="100%" role="presentation" border="0" cellpadding="0" cellspacing="10px" style="padding: 10px 30px 10px 60px;">
-                <tbody>
-                    <tr>
-                        <th>Image</th>
-                        <th>FoodItems</th>
-                        <th>QTY</th>
-                        <th>Price(per item)</th>
-                    </tr>
-                    {% for food in ordered_food %}
-                    <tr style="text-align:center;">
-                        <td><img src="http://{{domain}}{{food.fooditem.image.url}}" alt="{{food.fooditem|title}} Image" width="0"></td>
-                        <td>
-                            <p style="margin:0;">{{food.fooditem}}</p>
-                            <small><a href="http://{{domain}}{% url 'vendor_detail' food.fooditem.vendor.vendor_slug %}" style="color:red;">{{food.fooditem.vendor.vendor_name}}</a></small>
-                        </td>
-                        <td>{{food.quantity}}</td>
-                        <td>Rs. {{food.price}}/-</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <!--Ordered Food Table-->
-
-            <!--Order Amounts-->
-            <table bgcolor="#EAF0F6" width="100%" role="presentation" border="0" cellpadding="0" cellspacing="10px" style="padding: 10px 30px 30px 60px;">
-                <tbody>
-                    <tr><b>Subtotal:</b> {{customer_subtotal}} /-</tr>
-                    {% for key,val in tax_data.items %}
-                        {% for i,j in val.items %}
-                            <tr>
-                                <td><b>{{key}} <small>({{i}} %)</small> :</b> <span>Rs. </span> {{j}} /-</td>
-                            </tr>
-                        {% endfor %}
-                    {% endfor %}
-                    <tr><b>Total :</b> Rs. {{order.total}} /-</tr>
-                </tbody>
-            </table>
-            <!--Order Amounts-->
-            <!--Footer Starts-->
-            <table role="presentation" bgcolor="#C33332" width="100%">
+        <!--Order Amounts-->
+        <table bgcolor="#EAF0F6" width="100%" role="presentation" border="0" cellpadding="0" cellspacing="10px"
+            style="padding: 10px 30px 30px 60px;">
+            <tbody>
+                <tr><b>Subtotal:</b> {{customer_subtotal}} /-</tr>
+                {% for key,val in tax_data.items %}
+                {% for i,j in val.items %}
                 <tr>
-                    <td align="center" style="padding: 15px 15px; color: #fff;">
-                        <p>© {% now "Y" %} FoodOnline Marketplace, All Rights Reserved.</p>
-                        <a href="http://{{domain}}" style="color:#fff;">Visit Website</a>      
-                    </td>
+                    <td><b>{{key}} <small>({{i}} %)</small> :</b> <span>Rs. </span> {{j}} /-</td>
                 </tr>
-            </table> 
-            <!--Footer Ends-->
-        </div>
-    </body>
+                {% endfor %}
+                {% endfor %}
+                <tr><b>Total :</b> Rs. {{order.total}} /-</tr>
+            </tbody>
+        </table>
+        <!--Order Amounts-->
+        <!--Footer Starts-->
+        <table role="presentation" bgcolor="#C33332" width="100%">
+            <tr>
+                <td align="center" style="padding: 15px 15px; color: #fff;">
+                    <p>© {% now "Y" %} FoodOnline Marketplace, All Rights Reserved.</p>
+                    <a href="http://{{domain}}" style="color:#fff;">Visit Website</a>
+                </td>
+            </tr>
+        </table>
+        <!--Footer Ends-->
+    </div>
+</body>
+
 </html>
