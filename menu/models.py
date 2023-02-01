@@ -20,7 +20,6 @@ class Category(models.Model):
     def clean(self):
         self.category_name = self.category_name.capitalize()
 
-
 class FoodItem(models.Model):
     vendor =        models.ForeignKey(Vendor, on_delete=models.CASCADE)
     category_name = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='fooditems')

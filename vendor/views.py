@@ -33,7 +33,7 @@ def vprofile(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     vendor = get_object_or_404(Vendor, user=request.user)
 
-    if request.POST:
+    if request.POST:  # UPDATE Data
         profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
         vendor_form = VendorForm(request.POST, request.FILES, instance=vendor)
         if profile_form.is_valid() and vendor_form.is_valid():
@@ -45,7 +45,7 @@ def vprofile(request):
             print(profile_form.errors)
             print(vendor_form.errors)
 
-    else:
+    else: # READ Data
         profile_form = UserProfileForm(instance=profile)
         vendor_form = VendorForm(instance=vendor)
 
@@ -131,8 +131,6 @@ def edit_category(request,pk=None):
         else:
             messages.error(request,'Validation error!')
             return redirect(add_category)
-            
-
     else:
         form = CategoryForm(instance=category)
 
@@ -207,8 +205,6 @@ def edit_food(request,pk=None):
         else:
             messages.error(request,'Validation error!')
             return redirect(add_category)
-            
-
     else:
         form = FoodItemForm(instance=food)
         # modify form
@@ -298,9 +294,7 @@ def order_detail(request,order_number):
     try:
         order = Order.objects.get(order_number=order_number,is_ordered=True)
         ordered_food = OrderedFood.objects.filter(order=order,fooditem__vendor=get_vendor(request))
-
         data = order.get_total_by_vendor()
-
         context = {
             'order':order,
             'ordered_food':ordered_food,
@@ -308,7 +302,6 @@ def order_detail(request,order_number):
             'tax_dict':data['tax_dict'],
             'grand_total':data['grand_total'],
         }
-        
     except:
         return HttpResponse("Error")
     return render(request,'vendor/order_detail.html',context)

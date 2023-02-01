@@ -14,7 +14,7 @@ def detectUser(user):
     elif user.role==2:
         redirectUrl = 'custDashboard'
         return redirectUrl
-    elif user.role == None and user.is_superadmin:
+    elif user.role == None and user.is_superuser:
         redirectUrl = '/admin'
         return redirectUrl
 
@@ -26,8 +26,8 @@ def send_verification_email(request, user, mail_subject, template):
     message = render_to_string(template,{
         'user':user,
         'domain': current_site,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': default_token_generator.make_token(user),
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)), # this will create unique value of user
+        'token': default_token_generator.make_token(user), # this is unique value generated each time
         'domain':settings.SITE_URL,
     })
     

@@ -1,7 +1,6 @@
 from .models import Cart,Tax
 from menu.models import FoodItem
 
-
 def get_cart_counter(request):
     cart_count=0
     dict = {}

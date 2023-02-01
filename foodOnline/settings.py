@@ -136,7 +136,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Custome user model
+# Custom user model
 AUTH_USER_MODEL = 'accounts.User'
 
 # Media files

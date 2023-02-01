@@ -25,12 +25,10 @@ def order_total_by_vendor(order,vendor):
             for value in tax_dict[tax]:
                 total_tax += tax_dict[tax][value]
 
-        
     context = {
         'grand_total':round(subtotal+total_tax,2),
         'subtotal':round(subtotal,2),
         'total_tax':round(total_tax,2),
         'tax_dict':tax_dict,
     }
-
     return context

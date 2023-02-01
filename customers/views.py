@@ -24,9 +24,6 @@ def cprofile(request):
     else:
         profile_form = UserProfileForm(instance=profile)
         user_form = UserInfoForm(instance=request.user)
-
-    
-
     context = {
         'profile_form':profile_form,
         'user_form':user_form,
@@ -36,9 +33,11 @@ def cprofile(request):
 
 def my_orders(request):
     if request.GET.get('q') and request.GET.get('q') != 'All':
+        # sort order as per search criteria
         order = Order.objects.filter(user=request.user,is_ordered=True,status=request.GET.get('q')).order_by('-created_at')
         q = request.GET.get('q')
     else:
+        # Get all orders, without sorting
         order = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
         q="All"
     context ={

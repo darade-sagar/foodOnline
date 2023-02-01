@@ -1,5 +1,7 @@
 from . import models
 
+# This is a custom middleware which send Request object inside models.py.
+# to do this, we need to mention "request_object = ''" in models.py
 def RequestObjectMiddleware(get_response):
     # One-time configuration and initialization.
     

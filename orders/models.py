@@ -64,6 +64,7 @@ class Order(models.Model):
     def __str__(self):
         return self.order_number
 
+    # Will calculate total amount and tax amount for each vendor for single order
     def get_total_by_vendor(self):
         vendor = Vendor.objects.get(user=request_object.user) #type:ignore
         subtotal,total_tax=0,0
@@ -85,17 +86,14 @@ class Order(models.Model):
                 for value in tax_dict[tax]:
                     total_tax += tax_dict[tax][value]
 
-            
         context = {
             'grand_total':round(subtotal+total_tax,2),
             'subtotal':round(subtotal,2),
             'total_tax':round(total_tax,2),
             'tax_dict':tax_dict,
         }
-
         return context
    
-
     def order_placed_to(self):
         return ", ".join(str(i) for i in self.vendors.all())
 

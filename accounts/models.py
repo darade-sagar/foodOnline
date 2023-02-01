@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 # Create your models here.
 
 
@@ -34,13 +35,13 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.is_active = True
         user.is_staff = True
-        user.is_superadmin = True
+        user.is_superuser = True
         user.save(using=self._db)
 
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser,PermissionsMixin):
     VENDOR = 1
     CUSTOMER = 2
 
@@ -63,7 +64,7 @@ class User(AbstractBaseUser):
     modified_date = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    is_superadmin = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'

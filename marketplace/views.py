@@ -28,6 +28,7 @@ def marketplace(request):
 def vendor_detail(request, vendor_slug):
     vendor = get_object_or_404(Vendor,vendor_slug=vendor_slug)
     context = {}
+    # Search the food by category START
     if request.GET.get('category') != None:
         categories = Category.objects.filter(vendor=vendor,category_name=request.GET.get('category')).prefetch_related(
             Prefetch(
@@ -43,15 +44,17 @@ def vendor_detail(request, vendor_slug):
                 queryset= FoodItem.objects.filter(is_available=True)
             )
         )
+    # Search the food by category Ends
+
+    # All categories present for vendor
     allcategories = Category.objects.filter(vendor=vendor).prefetch_related(
             Prefetch(
                 'fooditems',
                 queryset= FoodItem.objects.filter(is_available=True)
             )
         )
+
     opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day','-from_hour')
-    
-    
     try:
         # Check current day opening hours
         today_date = date.today()
@@ -113,14 +116,15 @@ def decrease_cart(request, food_id):
             # check if food item exists
             try:
                 fooditem = FoodItem.objects.get(id=food_id)
-                # check if user has aleady added that food to the cart
+                # check if fooditem is present in cart
                 try:
                     checkCart = Cart.objects.get(user=request.user, fooditem=fooditem)
                     if checkCart.quantity>1:
-                        # dec cart qty
+                        # if count of fooditem > 1, We will reduce count by 1
                         checkCart.quantity -= 1
                         checkCart.save()
                     else:
+                        # else we will delete food item from cart
                         checkCart.delete()
                         checkCart.quantity = 0
                     return JsonResponse({'status':'Success','cart_counter':get_cart_counter(request),'qty':checkCart.quantity,'cart_ammount':get_cart_amounts(request)})
@@ -150,7 +154,7 @@ def delete_cart(request,cart_id=None):
             # check if food item exists
             try:
                 cart_item = Cart.objects.get(user=request.user,id=cart_id)
-                if cart_item:
+                if cart_item: # if food exist in cart, we will delete food
                     cart_item.delete()
                     return JsonResponse({'status':'success', 'message':'Cart item has been deleted','cart_counter':get_cart_counter(request),'cart_ammount':get_cart_amounts(request)})
                 else:
@@ -224,7 +228,6 @@ def product_info(request,id):
         )
     )[:3]
 
-
     # If anyone submit rating, then save it
     if request.POST:
         rate_value = request.POST.get('rate_value')
@@ -236,13 +239,12 @@ def product_info(request,id):
         )
         return redirect(reverse('product_info', args=[id]))
     
-    # get user_rating for current Project
+    # get user_rating for current product
     try:
         user_rating = Rating.objects.get(food_item__id = id, user=request.user)
     except:
         user_rating = None
 
-        
     # Overall Rating
     rating_obj = Rating.objects.filter(food_item__id=id).order_by('-updated_at')
     rating_sum = rating_obj.aggregate(Sum('rate_value'))

@@ -45,7 +45,6 @@ def registerUser(request):
             template = 'accounts/emails/account_verification_email.html'
             send_verification_email(request, user, mail_subject=mail_subject, template=template)
 
-
             messages.success(request,'Your account has been register sucessfully')
             return redirect(registerUser)
         else:
@@ -57,7 +56,6 @@ def registerUser(request):
         'form':form
     }
     return render(request, 'accounts/registerUser.html', context)
-
 
 def registerVendor(request):
     if request.user.is_authenticated:
@@ -123,7 +121,6 @@ def login_view(request):
         else:
             messages.error(request,"Invalid Creadentials")
             return redirect(login_view)
-
     else:
         return render(request,'accounts/login.html')
 
@@ -178,10 +175,8 @@ def custDashboard(request):
         'orders':orders,
         'recent_orders':orders[:5],
         'orders_count':orders.count(),
-        
     }
     return render(request,'accounts/custDashboard.html',context)
-
 
 def activate(request, uidb64, token):
     try:
@@ -236,8 +231,10 @@ def reset_password_validate(request, uidb64, token):
         messages.error(request,'This link has been expired')
         return redirect(myAccount)
 
-    
 def reset_password(request):
+    if request.session.get('uid') == None:
+        messages.error(request, 'Invalid Request')
+        return redirect(forgot_password)
     if request.POST:
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
@@ -254,6 +251,7 @@ def reset_password(request):
             messages.error(request, 'Password not matched')
             return redirect(reset_password)
     return render(request,'accounts/reset_password.html')
+
 
 def NewsletterEmailRegister(request):
     if request.POST:
